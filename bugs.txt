@@ -1,0 +1,14 @@
+18/08/2010 Exported text file does not contain text contents.
+
+18/08/2010 Exported XLIFF file does not contain text contents. Perhaps only an issue when a job-level comment is not added.
+
+18/08/2010 On Export Job page, "Done" button doesn't seem to have a function.
+
+23/08/2010 Test that all metadata is imported and exported through LocConnect jobs. 
+
+23/08/2010 LocConnect jobs are not analysed for any errors.
+
+*** PREVIOUSLY FIXED ***************************************************
+
+18/08/2010 Import of LocConnect job results in an Apache error when importing job f94e2a27e7.
+ [Wed Aug 18 11:55:40 2010] [error] [client 10.220.1.17] PHP Fatal error:  Call to a member function attributes() on a non-object in /home/eoin/Dropbox/UL/sites/lkr/repo/public_html/scripts/cnlf_import.php on line 49, referer: http://10.100.13.153:81/author/import_cnlf_jobs.php?submit=Import+LocConnect+Jobs

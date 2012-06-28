@@ -1,0 +1,9 @@
+net.rootnode.loomchild.util.exceptions
+net.rootnode.loomchild.util.io
+net.rootnode.loomchild.util.testing
+net.rootnode.loomchild.util.xml
+net.sourceforge.segment
+net.sourceforge.segment.srx
+net.sourceforge.segment.srx.io
+net.sourceforge.segment.srx.io.bind
+net.sourceforge.segment.ui.console

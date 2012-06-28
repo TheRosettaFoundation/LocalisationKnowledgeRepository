@@ -1,0 +1,24 @@
+php_value error_reporting 7 
+# 8191 = logging of everything except run-time notices.
+
+php_flag display_errors on 
+
+RewriteEngine On
+
+RewriteRule ^author/view/([0-9]+)/$ author/view.php?job_id=$1
+RewriteRule ^author/view/([0-9]+)/analyse/$ author/view.php?job_id=$1&analyse=1
+
+RewriteRule ^pm/view/([0-9]+)/$ pm/view.php?job_id=$1
+RewriteRule ^pm/view/([0-9]+)/cnlf/$ pm/view.php?job_id=$1&cnlf=1
+RewriteRule ^pm/export/([0-9]+)/$ pm/export.php?job_id=$1
+
+RewriteRule ^author/completed/([0-9]+)/$ author/index.php?job_id=$1&action=completed
+RewriteRule ^author/invalid_name/$ author/index.php?action=invalid_name
+RewriteRule ^pm/sentback/([0-9]+)/$ pm/index.php?job_id=$1&action=sentback
+
+RewriteRule ^pm/configuration/guidelines/$ pm/manage_guideline_settings.php
+RewriteRule ^pm/configuration/guidelines/([0-9a-z]+)/$ pm/manage_guideline_settings.php?CNLF_id=$1
+
+RewriteRule ^archive/author/$ job_archive.php?visitor=author
+RewriteRule ^archive/pm/$ job_archive.php?visitor=pm
+

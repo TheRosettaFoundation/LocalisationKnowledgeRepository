@@ -1,0 +1,44 @@
+html { height: 100%; }
+body { min-height: 100%; height: 100%; font-family: Georgia, serif; /*"Lucida Sans Unicode","Lucida Grande",Garuda,sans-serif;*/ color: #333333;}
+p {margin-bottom: 0.618em;}
+h1 {font-weight: bold; font-size: 1.618em; padding: 0.618em 0;}
+	h1 a {text-decoration: none; color: #006699;}
+	h1 a:hover {text-decoration: underline;}
+h2 {color: #006699; font-weight: bold; font-size: 2.618em; margin: 0.618em 0;}
+h3 {color: #006699; font-weight: bold; font-size: 1.618em; margin-top: 1.618em;}
+th {font-weight: bold; padding: 5px; background-color: #eeeeee; vertical-align: top;}
+td {vertical-align: top; padding: 0.382em;}
+em {font-style: italic;}
+strong {font-weight: bold;}
+blockquote {margin-left: 2.618em;}
+a {text-decoration: none;}
+a:hover {text-decoration: underline;}
+a.button{background-color:#f5f5f5;border:1px solid #c5c5c5;border-left:1px solid #eee;border-top:1px solid #eee;color:#1c991c;cursor:pointer;display:inline;font-size:100%;font-weight:700;line-height:130%;margin: 1px 0;padding:5px 10px 6px 7px;text-decoration:none;}
+a.button:hover{background-color:#dbf7d1;border:1px solid #25cc25;color:#1c991c;}
+a.button:active{background-color:#25cc25;border:1px solid #25cc25;color:#fff;}
+a.button_disabled, a.button_disabled:hover, a.button_disabled:active{cursor: default;color: #ddd;border:1px solid #c5c5c5;border-left:1px solid #eee;border-top:1px solid #eee;background-color:#f5f5f5;}
+table {border-style: solid; border-width: 1px; border-color: #eee;}
+/* table.segments {max-width: 650px;} */
+#segments {padding: 2.618em 0 0;}
+#segment_nb {width: 1.5em;}
+.segment_nb {color: #aaa;}
+col#col_segment {width: 1em;}
+col#col_original {max-width: 307px;}
+col#col_editable {}
+col#col_comment {width: 280px;}
+tr {border: 1px solid #eee;}
+ul {list-style-type:disc; margin-left: 1em;}
+#body_wrapper {max-width: 960px; min-height: 100%; margin-left: auto; margin-right: auto; border-width: 0 1px; border-color: #006699; border-style: solid;}
+#header {min-height: 40px; padding: 0 1em;}
+#cngl {float: right;}
+#footer {padding: 0 1em; font-style: italic; margin-top: 8em;}
+#logos img {vertical-align: middle; margin-right: 2em;}
+#content {padding: 1.5em 1em 0 1em; border-style: solid; border-width: 1px 0 0 0; border-color: #EFEFEF;}
+.edit_area{ cursor : pointer; width: 307px; min-height: 1em; }
+.edited{background-color: #E9FFE9;}
+.editing{ background-color: #ffffee; }
+.highlight{background-color: #FFDFDF;}
+.qtip-content{font-size: 0.8em; }
+.qtip-content hr{background-color: #F9E98E; color: #F9E98E; height: 1px; border: 0;}
+.qtip-content h3{color: inherit; margin: 0 0 0.5em 0; font-size: 1.2em;}
+.status {color: #aaa;}
