@@ -11,9 +11,10 @@
  * There is also a link to the job archive for a list of all jobs
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
 $header = array('title' => 'LKR - Author Central');
 Template::header($header);
+$settings = new Settings();
 ?>
 
 <h2>Author Central</h2>
@@ -29,10 +30,12 @@ if($action == 'completed')
 	echo '</div>';
 }
 ?>
+<?php
+echo '<a class="button" href="'.$settings->path_to_domain_root($_SERVER).'/author/import.solas.php">Import LocConnect Jobs</a>';
 
-<a class="button" href="/author/import.solas.php">Import LocConnect Jobs</a>
 
-<form action="/scripts/file.upload.php" method="post" enctype="multipart/form-data">
+echo '<form action="'.$settings->path_to_domain_root($_SERVER).'/scripts/file.upload.php" method="post" enctype="multipart/form-data">';
+?>
 	<h3>Create a Job</h3>
 	<p>
 <?php
@@ -83,7 +86,7 @@ if ($recent_jobs)
 	echo '<ul>'."\n";
 	foreach($recent_jobs as $job)
 	{
-		echo '<li><a href="/author/view/'.$job->getJobID().'/analyse/">Job '.$job->getJobID().'</a>';
+		echo '<li><a href="'.$settings->path_to_domain_root($_SERVER).'/author/view/'.$job->getJobID().'/analyse/">Job '.$job->getJobID().'</a>';
 		$job->html_status();
 		echo '</li>'."\n";
 	}
@@ -103,9 +106,9 @@ if($completedJobs)
 {
 	echo '<ul>'."\n";
 	foreach($completedJobs as $job)
-	{?>
-		<li><a href="/author/view/<?php echo $job->getJobID(); ?>/analyse/">Job
-		<?php echo $job->getJobId().'</a>';
+	{
+		echo '<li><a href="'.$settings->path_to_domain_root($_SERVER).'/author/view/'.$job->getJobID().'/analyse/">Job';
+		echo $job->getJobId().'</a>';
 		if($job->isClosed())
 		{
 			$job->html_status();
@@ -122,5 +125,5 @@ else
 	echo '<p>There are no jobs currently up for review</p>';
 }
 //link to the job archive which holds all the jobs from the DB
-echo '<br /><p><a href="/archive/author/">Job Archive</a></p>';
+echo '<br /><p><a href="'.$settings->path_to_domain_root($_SERVER).'/archive/author/">Job Archive</a></p>';
 Template::footer();

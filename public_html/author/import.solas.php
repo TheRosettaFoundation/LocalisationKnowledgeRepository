@@ -11,30 +11,39 @@
  * @author: David O Carroll
  * Modified by: Eoin Ó Conchúir
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
+$settings = new Settings();
+
 //Call the fetch_jobs method on the cnlf server
 header ("Content-Type:text/html; charset=utf-8");
 $settings = new Settings();		//get the url from conf
+$request_url = $settings->get('cnlf.url').'/fetch_job.php';
 $request = new HTTP_Request2($settings->get('cnlf.url').'/fetch_job.php', HTTP_Request2::METHOD_GET);
 $request->setHeader('Accept-Charset', 'utf-8');
 $url = $request->getUrl();
 $url->setQueryVariable('com', 'LKR');         // set your component name here
 // This will get a list of pending jobs from the CNLF server and store them $jobs variable;
-$jobs = $request->send()->getBody();
-// Get the job ids using xpath to navigate the xml file
-$xml = new SimpleXMLElement($jobs);
-$job_ids = $xml->xpath('/jobs/job');
+
+$result = $request->send();
+if($result->getStatus() != 200) {
+    echo "<p>ERROR: HTML request failed: ".$result->getStatus()." - ".$result->getReasonPhrase()."</p>";
+} else {
+    $jobs = $result->getBody();
+    // Get the job ids using xpath to navigate the xml file
+    $xml = new SimpleXMLElement($jobs);
+    $job_ids = $xml->xpath('/jobs/job');
+}
 
 //include the script to check/uncheck all checkboxes
 $header = array('title' => 'LKR - CNLF Import',
-				'extra_scripts' => '<script language="JavaScript" src="/resources/js/check_uncheck.js"></script>');
+				'extra_scripts' => '<script language="JavaScript" src="'.$settings->path_to_domain_root($_SERVER).'/resources/js/check_uncheck.js"></script>');
 Template::header($header);
 
 echo '<h3>Import LocConnect Jobs</h3><br />';
 if($job_ids)
 {
 	// create a form for sending the ids to the import function
-	echo '<form name="form1" method="POST" action="/scripts/import.solas.php">';
+	echo '<form name="form1" method="POST" action="'.$settings->path_to_domain_root($_SERVER).'/scripts/import.solas.php">';
 	//add the buttons to check/uncheck all checkboxes
 	echo '<p><input type="button" value="Select All" onClick="javascript:checkAll();" />';
 	echo '<input type="button" value="Deselect All" onClick="javascript:checkNone();" /></p>';

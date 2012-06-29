@@ -15,7 +15,7 @@ class Template
 	 */
 	static function header($params = null)
 	{
-		include ('./includes/header.php');
+		include (__DIR__.'/../includes/header.php');
 	}
 	
 	/*
@@ -23,6 +23,6 @@ class Template
 	 */
 	static function footer()
 	{
-		include ('./includes/footer.php');
+		include (__DIR__.'/../includes/footer.php');
 	}
 }

@@ -9,15 +9,17 @@
  * Here the author edits the job in adherence to the guidelines attached to each segment
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 // Incoming parameters.
 $job_id = intval(IO::get_val('job_id'));
 $analyse = (intval(IO::get_val('analyse')) == 1) ? 1 : false;
 $job = new Job($job_id);
 $header = array('title' => 'LKR - Job '.$job_id,
-				'extra_scripts' => '<script type="text/javascript" src="/resources/js/jquery.jeditable.js"></script>
-				 					<script type="text/javascript" src="/resources/js/editable.js"></script>'
+				'extra_scripts' => '<script type="text/javascript" src="'.$domain_root.'/resources/js/jquery.jeditable.js"></script>
+				 					<script type="text/javascript" src="'.$domain_root.'/resources/js/editable.js"></script>'
 );
 Template::header($header);
 /* Run an analysis on this job. */
@@ -52,9 +54,8 @@ if ($job)
 					// if the job is complete don't show the analyse button
 					if(!$job->isComplete())
 					{
-						?>
-							<form action="/author/view/<?php echo $job_id; ?>/analyse/" method="get">
-								<input type="submit" value="<?php if ($analyse) echo 'Re-analyse'; else echo 'Analyse';?>" />
+						echo '<form action="'.$domain_root.'/author/view/'.$job_id.'/analyse/" method="get">';?>
+							    <input type="submit" value="<?php if ($analyse) echo 'Re-analyse'; else echo 'Analyse';?>" />
 							</form>
 					<?php
 					} ?>
@@ -97,7 +98,7 @@ if ($job)
 										//if it has been altered or has a warning display a reanalyse button
 										if($segment->isEdited() || $segment->hasWarning())
 										{
-											echo '<form action="/scripts/redirect.php?job_id='.$job_id.'&seg_id='.$segment->getSegmentID().'" method="post">';
+											echo '<form action="'.$domain_root.'/scripts/redirect.php?job_id='.$job_id.'&seg_id='.$segment->getSegmentID().'" method="post">';
 												echo '<button type="submit">';
 													if ($analyse) echo 'Re-analyse'; else echo 'Analyse';
 												echo '</button>';
@@ -122,7 +123,7 @@ if ($job)
 						echo '<tr>';
 							echo '<td></td>';
 							echo '<td></td>';
-							echo '<td><form action="/author/view/'.$job_id.'/analyse/" method="get">
+							echo '<td><form action="'.$domain_root.'/author/view/'.$job_id.'/analyse/" method="get">
 											<input type="submit" value="Re-analyse" />
 										</form>
 								  </td>';

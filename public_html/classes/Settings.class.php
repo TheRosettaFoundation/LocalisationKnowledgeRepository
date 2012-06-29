@@ -13,7 +13,7 @@ Class Settings {
 
 	function Settings() 
 	{
-		$file = $_SERVER['DOCUMENT_ROOT'].'/conf/conf.php';
+		$file = __DIR__.'/../conf/conf.php';
 		$this->load($file);
 	}
 
@@ -22,9 +22,11 @@ Class Settings {
 
         $result = $this->_settings;
         foreach ($var as $key) {
-            if (!isset($result[$key])) { return false; }
-
-            $result = $result[$key];
+            if (!isset($result[$key])) {
+                $result = false;
+            } else {
+                $result = $result[$key];
+            }
         }
 
         return $result;
@@ -47,6 +49,16 @@ Class Settings {
             $this->_settings[$key] = $val;
         }
 
+    }
+
+    function path_to_domain_root($srvr) {
+        $ret = '';
+        $domainRoot = $this->get('domain.root');
+        if($domainRoot != '') {
+            $ret = substr($srvr['REQUEST_URI'], 0, strpos($srvr['REQUEST_URI'], $domainRoot) + strlen($domainRoot));
+        }
+
+        return $ret;
     }
 
 }

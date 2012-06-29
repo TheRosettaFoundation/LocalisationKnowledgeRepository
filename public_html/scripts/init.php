@@ -9,14 +9,13 @@
  * @author: David O Carroll
  */
 
-
-require('./classes/Settings.class.php');
-require('./classes/MySQLHandler.class.php');
-require('./classes/IO.class.php');
-require('./classes/Job.class.php');
-require('./classes/Template.class.php');
-require('./classes/Report.class.php');
-require('./classes/Segment.class.php');
-require('./classes/Stopword.class.php');
-require('./classes/Solas.class.php');
+require(__DIR__.'/../classes/Settings.class.php');
+require(__DIR__.'/../classes/MySQLHandler.class.php');
+require(__DIR__.'/../classes/IO.class.php');
+require(__DIR__.'/../classes/Job.class.php');
+require(__DIR__.'/../classes/Template.class.php');
+require(__DIR__.'/../classes/Report.class.php');
+require(__DIR__.'/../classes/Segment.class.php');
+require(__DIR__.'/../classes/Stopword.class.php');
+require(__DIR__.'/../classes/Solas.class.php');
 require('HTTP/Request2.php');

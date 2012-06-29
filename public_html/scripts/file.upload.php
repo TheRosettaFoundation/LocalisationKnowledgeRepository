@@ -9,7 +9,7 @@
  * @author: David O Carroll
  * @edited: Eoin Ó Conchúir
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
 
 /* Generate new job id */
 $sql = new MySQLHandler();
@@ -24,7 +24,7 @@ if(strlen($name) != 0)
 else
 {
 	// the name field is mandatory, go back and enter it again
-	header('Location: /author/invalid_name/');
+	header('Location: '.Settings::path_to_public_html($_SERVER).'/author/invalid_name/');
 	die;
 }
 $email = IO::post_val('email');
@@ -101,8 +101,8 @@ if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploa
 		// Forward to view.
 		$host  = $_SERVER['HTTP_HOST'];
 		//$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-		$extra = 'author/view/'.$job_id.'/analyse/';
-		header("Location: http://$host$uri/$extra");
+		$extra = Settings::path_to_public_html($_SERVER).'/author/view/'.$job_id.'/analyse/';
+		header("Location: http://$host$uri$extra");
 	}
 	else 
 	{
@@ -139,8 +139,8 @@ else if (!empty($_POST['import_textarea']))
 		// Forward to view.
 		$host  = $_SERVER['HTTP_HOST'];
 		//$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-		$extra = 'author/view/'.$job_id.'/analyse/';
-		header("Location: http://$host$uri/$extra");
+		$extra = Settings::path_to_html($_SERVER).'/author/view/'.$job_id.'/analyse/';
+		header("Location: http://$host$uri$extra");
 	}
 }
 else

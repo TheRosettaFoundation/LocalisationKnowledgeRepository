@@ -16,7 +16,7 @@
 //error_reporting(E_ALL);
 //ini_set('display_errors', '1');
 
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
 if(isset($_POST['submit']) && ($_POST['submit'] == 'Import') && isset($_POST['job']))
 {
 	$job_ids = $_POST['job'];		//this returns an array of cnlf job ids
@@ -114,4 +114,4 @@ if(isset($_POST['submit']) && ($_POST['submit'] == 'Import') && isset($_POST['jo
 		} // foreach
 	}
 }
-header('Location: /author/');
+header('Location: ../author/');

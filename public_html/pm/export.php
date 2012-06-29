@@ -11,7 +11,9 @@
  * with all trace of the CNLF id removed in case it would attempt to update an old CNLF job
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 $job_id = intval(IO::get_val('job_id'));
 $header = array('title' => 'LKR - Job '.$job_id);
@@ -27,7 +29,9 @@ if(isset($_POST['comment']))
 <p>This file was maked as completed on <?php echo $job->getCompleteDate(); ?> and was closed on <?php echo $job->getClosedDate(); ?>.</p>
 <p>To export this file as an XLIFF (XML Localisation Interchange File Format) click on the Save As XLIFF button below.</p><br />
 
-<form action="/scripts/file.export.php?job_id=<?php echo $job->getJobID(); ?>" method="post">
+<?php
+echo '<form action="'.$domain_root.'/scripts/file.export.php?job_id='.$job->getJobID().'" method="post">';
+?>
 	<input type="submit" name="save_to_xliff" value="Save As XLIFF" />&nbsp;
 	<input type="submit" name="save_to_txt" value="Save As txt" />&nbsp;
 	<?php

@@ -9,7 +9,7 @@
  * This is the home page of the LKR
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/scripts/init.php');
 $header = Array('title' => 'LKR - Virtual Community');
 Template::header($header);
 ?>

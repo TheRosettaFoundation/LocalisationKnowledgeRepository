@@ -10,11 +10,14 @@
  * NOTE: CNLF jobs have their guidelines stored in the database, all other jobs share guidelines
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
  
 $header = array('title' => 'LKR - Manage Guideline Settings',
-		'extra_scripts' => '<script language="JavaScript" src="/resources/js/confirmDelete.js"></script>
-							<script language="JavaScript" src="/resources/js/check_uncheck.js"></script>'
+		'extra_scripts' => '<script language="JavaScript" src="'.$domain_root.'/resources/js/confirmDelete.js"></script>
+							<script language="JavaScript" src="'.$domain_root.'/resources/js/check_uncheck.js"></script>'
 );
 Template::header($header);
 $stopwords = Report::getAllStopwords();
@@ -22,7 +25,7 @@ $reports = Report::getAllReports();
 $CNLF_id = IO::get_val('CNLF_id');
 echo '<h2>Guideline Settings</h2>';
 echo '<div id="cBoxes">';
-echo '<form name="form1" method="POST" action="/scripts/change_guideline_settings.php">';
+echo '<form name="form1" method="POST" action="'.$domain_root.'/scripts/change_guideline_settings.php">';
 echo '<h3>Lexicology Guidelines</h3>';
 $guideline_applicable = false;		//Checks if a guideline appeared in the list
 if($reports)
@@ -244,7 +247,7 @@ if($stopwords)
 			$word = $stopword->getStopword();
 			echo '<input type="checkbox" name="stopword_'.$stopword->getStopwordID().'" value="'.$word.'" '.$checkbox.'>';
 			echo '&nbsp;&nbsp;&nbsp;Do not use "'.$word.'"';
-			echo '&nbsp;<a href="/pm/edit_stopword.php?stopword_id='.$word.'">edit</a>&nbsp;';
+			echo '&nbsp;<a href="'.$domain_root.'/pm/edit_stopword.php?stopword_id='.$word.'">edit</a>&nbsp;';
 			echo '<a href="javascript:confirmDelete('.$stopword->getStopwordID().')">delete</a>';
 			echo '<br />' ;
 		}
@@ -265,7 +268,9 @@ echo '</form>';
 
 <h3>Add Custom Guidelines</h3>
 <br />
-<form action="/scripts/manage_stopword_list.php" method = "POST">
+<?php
+echo '<form action="'.$domain_root.'/scripts/manage_stopword_list.php" method = "POST">';
+?>
 	<p>Stopword: <input type="textarea" name="stopword"></p>
 	<p>Title of Warning: <input type="textarea" name="title_of_warning" value="Custom Guideline"></p>
 	<p>Warning Description: <input type="textarea" name="warning_description" value="A warning goes here."></p>

@@ -11,15 +11,18 @@
  * @author: David O Carroll
  */
 
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 // Incoming parameters.
 $job_id = intval(IO::get_val('job_id'));
 $cnlf = intval(IO::get_val('cnlf'));
 $job = new Job($job_id);
 $header = array('title' => 'LKR - Job '.$job_id,
-				'extra_scripts' => '<script type="text/javascript" src="/resources/js/jquery.jeditable.js"></script>
-				 					<script type="text/javascript" src="/resources/js/editable.js"></script>'
+				'extra_scripts' => '<script type="text/javascript" src="'.$domain_root.'/resources/js/jquery.jeditable.js"></script>
+				 					<script type="text/javascript" src="'.$domain_root.'/resources/js/editable.js"></script>'
 );
 Template::header($header);
 

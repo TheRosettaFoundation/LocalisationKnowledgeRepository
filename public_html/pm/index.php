@@ -9,10 +9,13 @@
  * This script allows the PROJECT MANAGER to select completed jobs to review or closed jobs
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/../scripts/init.php');
 
 $header = array('title' => 'LKR - Project Manager');
 Template::header($header);
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 echo '<h2>Project Manager Central</h2>';
 $action = IO::get_val(action);
@@ -34,9 +37,9 @@ if($completedJobs)
 	foreach($completedJobs as $job)
 	{
 		if(!$job->isClosed())
-		{?>
-			<li><a href="/pm/view/<?php echo $job->getJobID(); ?>/">Job
-			<?php echo $job->getJobId().'</a>';
+		{
+			echo '<li><a href="'.$domain_root.'/pm/view/'.$job->getJobID().'/">Job';
+			echo $job->getJobId().'</a>';
 			$job->html_status();
 			echo '</li>'."\n";
 			$noCompletedJobs = false;
@@ -55,9 +58,9 @@ if($closedJobs)
 {
 	echo '<ul>'."\n";
 	foreach($closedJobs as $job)
-	{?>
-		<li><a href="/pm/view/<?php echo $job->getJobID(); ?>/">Job
-		<?php echo $job->getJobId().'</a>';
+	{
+		echo '<li><a href="'.$domain_root.'/pm/view/'.$job->getJobID().'/">Job';
+		echo $job->getJobId().'</a>';
 		$job->html_status();
 		echo '</li>'."\n";
 	}
@@ -69,9 +72,9 @@ else
 }
 
 // Link to the job archive
-echo '<br /><p><a href="/archive/pm/">Job Archive</a></p>';
+echo '<br /><p><a href="'.$domain_root.'/archive/pm/">Job Archive</a></p>';
 
 // Link to guideline configuration page
-echo '<br /><br /><p><a href="/pm/configuration/guidelines/">Change your guideline settings</a></p>';
+echo '<br /><br /><p><a href="'.$domain_root.'/pm/configuration/guidelines/">Change your guideline settings</a></p>';
 
 Template::footer();

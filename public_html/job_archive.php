@@ -10,11 +10,13 @@
  * Can be viewed by either the PM or the Author.
  * @author: David O Carroll
  */
-require('./scripts/init.php');
+require(__DIR__.'/scripts/init.php');
+
+$settings = new Settings();
 
 $header = array('title' => 'LKR - Job Archive',
-				'extra_scripts' => '<script type="text/javascript" src="/resources/js/jquery.jeditable.js"></script>
-				 					<script type="text/javascript" src="/resources/js/editable.js"></script>'
+				'extra_scripts' => '<script type="text/javascript" src="'.$settings->path_to_domain_root($_SERVER).'/resources/js/jquery.jeditable.js"></script>
+				 					<script type="text/javascript" src="'.$settings->path_to_domain_root($_SERVER).'/resources/js/editable.js"></script>'
 );
 Template::header($header);
 ?>
@@ -25,11 +27,13 @@ Template::header($header);
 $visitor = $_GET['visitor'];
 if($visitor == 'author')
 {
-	echo '<p>Back to <a href="/author/">Author Central</a> or <a href="/pm/">Log In As PM</a></p>';
+	echo '<p>Back to <a href="'.$settings->path_to_domain_root($_SERVER).'/author/">Author Central</a> or ';
+    echo '<a href="'.$settings->path_to_domain_root($_SERVER).'/pm/">Log In As PM</a></p>';
 }
 elseif($visitor = 'pm')
 {
-	echo '<p>Back to <a href="/pm/">PM Central</a> or <a href="/author/">Log In As Author</a></p>';
+	echo '<p>Back to <a href="'.$settings->path_to_domain_root($_SERVER).'/pm/">PM Central</a>';
+    echo ' or <a href="'.$settings->path_to_domain_root($_SERVER).'/author/">Log In As Author</a></p>';
 }
 
 echo '<ul>';
@@ -37,7 +41,7 @@ if($jobs = Job::getAllJobs())
 {
 	foreach($jobs as $job)
 	{
-		echo '<li><a href="/'.$visitor.'/view/'.$job->getJobID().'/">Job '.$job->getJobID().'</a> ';
+		echo '<li><a href="'.$settings->path_to_domain_root($_SERVER).'/'.$visitor.'/view/'.$job->getJobID().'/">Job '.$job->getJobID().'</a> ';
 		$job->html_status();
 		echo '</li>';
 	}

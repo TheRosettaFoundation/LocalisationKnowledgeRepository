@@ -812,12 +812,14 @@ class Job {
 	{
 		if(!$this->isComplete())		// The job is still being examined and so the warnings must be shown
 		{
+            $settings = new Settings();
+            $domain_root = $settings->path_to_domain_root($_SERVER);
 			$segs_with_warnings = $report->getInfectedSegments($job_id);
 			$warningCount = $this->countWarnings($report);
 			if($warningCount == 0)
 			{
 				echo '<p>You have 0 warnings.</p>';
-				echo '<p><a class="button" href="/scripts/pass_to_pm.php?job_id='.$this->getJobID().'">Pass on to PM</a></p>';
+				echo '<p><a class="button" href="'.$domain_root.'/scripts/pass_to_pm.php?job_id='.$this->getJobID().'">Pass on to PM</a></p>';
 			} 
 			else 
 			{
@@ -846,7 +848,7 @@ class Job {
 					}
 					echo '.</p>';
 				}
-				echo '<p><a class="button" href="/scripts/pass_to_pm.php?job_id='.$this->getJobID().'">Pass on to PM with warnings</a></p>';
+				echo '<p><a class="button" href="'.$domain_root.'/scripts/pass_to_pm.php?job_id='.$this->getJobID().'">Pass on to PM with warnings</a></p>';
 			}
 		} 
 		else 
@@ -899,19 +901,19 @@ class Job {
 			// Print the actions available to the PM
 			if($warningCount == 0)
 			{
-				echo '<p><a class="button" href="/scripts/close_job.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Complete Job & Export</a> or ';
-				echo '<a class="button" href="/scripts/send_back.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Send Back</a> to author for more work.</p>';
+				echo '<p><a class="button" href="'.$domain_root.'/scripts/close_job.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Complete Job & Export</a> or ';
+				echo '<a class="button" href="'.$domain_root.'/scripts/send_back.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Send Back</a> to author for more work.</p>';
 			} 
 			else 
 			{
-				echo '<p><a class="button" href="/scripts/send_back.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Send back</a> to author for more work or ';
-				echo '<a class="button" href="/scripts/close_job.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Complete Job & Export</a> anyway.</p>';
+				echo '<p><a class="button" href="'.$domain_root.'/scripts/send_back.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Send back</a> to author for more work or ';
+				echo '<a class="button" href="'.$domain_root.'/scripts/close_job.php?job_id='.$this->getJobID().'&cnlf='.$cnlf.'">Complete Job & Export</a> anyway.</p>';
 			}
 		} 
 		else 
 		{
 			//Thi si for a closed job, it allows the PM to re-export the job but not edit it
-			echo '<p><a class="button" href="/pm/export_options.php?job_id='.$this->getJobID().'">Export job</a></p>';
+			echo '<p><a class="button" href="'.$domain_root.'/pm/export_options.php?job_id='.$this->getJobID().'">Export job</a></p>';
 		}
 	}
 	
