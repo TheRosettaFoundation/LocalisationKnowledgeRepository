@@ -8,7 +8,10 @@
  * Script used to mark a job in the database as closed
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 $job_id = intval(IO::get_val('job_id'));
 //$cnlf is a flag that is set to 1 if the current user navigated to this page from the CNLF server
@@ -25,12 +28,11 @@ $sql->Update($q);
 if($cnlf == 1)
 {
 	//Go back to the CNLF server
-	$settings = new Settings();
 	header('Location: '.$settings->get('cnlf.url').'/');
 }
 else
 {
 	//Go to the Export options
-	header('Location: /pm/export_options.php?job_id='.$job_id.'' ) ;
+	header('Location: '.$domain_root.'/pm/export_options.php?job_id='.$job_id.'' ) ;
 }
 die;

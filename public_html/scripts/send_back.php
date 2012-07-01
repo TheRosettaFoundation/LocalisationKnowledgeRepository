@@ -8,7 +8,10 @@
  * A script used to send a job back to the author for more work
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
  
 // Get incoming parameters
 $job_id = intval(IO::get_val('job_id'));
@@ -34,7 +37,6 @@ if($CNLF_id != null)
 {
 	//Must be a CNLF job, send the feedback
 	header ("Content-Type:text/html; charset=utf-8");
-	$settings = new Settings();
 	$request = new HTTP_Request2($settings->get('cnlf.url').'/send_feedback.php', HTTP_Request2::METHOD_GET);
 	$request->setHeader('Accept-Charset', 'utf-8');
 	$url = $request->getUrl();
@@ -59,6 +61,6 @@ if($cnlf == 1)
 }
 else
 {
-	header('Location: /pm/sentback/'.$job_id.'/' ) ;
+	header('Location: '.$domain_root.'/pm/sentback/'.$job_id.'/' ) ;
 }
 die;

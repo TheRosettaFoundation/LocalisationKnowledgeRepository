@@ -9,7 +9,7 @@
  * @author: David O Carroll
  */
 
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
 
 // get incomming parameters
 $job_id = intval(IO::get_val('job_id'));
@@ -18,5 +18,8 @@ $job = new Job($job_id);
 //Run the report
 $report = new Report($job);
 
-header('Location: /author/view/'.$job_id.'/analyse/#seg_'.$seg_id);
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
+
+header('Location: '.$domain_root.'/author/view/'.$job_id.'/analyse/#seg_'.$seg_id);
 die;

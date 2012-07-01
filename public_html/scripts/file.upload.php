@@ -9,11 +9,13 @@
  * @author: David O Carroll
  * @edited: Eoin Ó Conchúir
  */
-require(__DIR__.'/../scripts/init.php');
+require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 /* Generate new job id */
 $sql = new MySQLHandler();
-$settings = new Settings();
 $sql->init();
 $name = IO::post_val('full_name');
 if(strlen($name) != 0)
@@ -24,7 +26,7 @@ if(strlen($name) != 0)
 else
 {
 	// the name field is mandatory, go back and enter it again
-	header('Location: '.Settings::path_to_public_html($_SERVER).'/author/invalid_name/');
+	header('Location: '.$domain_root.'/author/invalid_name/');
 	die;
 }
 $email = IO::post_val('email');
@@ -48,11 +50,13 @@ if(strlen($companyName) != 0)
 
 if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploaded file
 {
+  echo '<p>Found uploaded file</p>';
 	$job_id = false;
 	// Check if it's an XLIFF file being uploaded.
 	$ext = strtolower(array_pop(explode('.',$_FILES['import_file']['name'])));
 	if ($ext == 'xlf' || $ext == 'xliff')
 	{
+    echo '<p>Its an Xliff!!</p>';
 		$xliff_file_contents = file_get_contents($_FILES['import_file']['tmp_name']);
 
 		// Override provided domain field with the one in XLIFF, if it's set!
@@ -72,11 +76,13 @@ if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploa
 	}
 	else if ($ext == 'txt')
 	{
+    echo '<p>Its a txt</p>';
 		$job_id = Job::insert($sql, $name, $email, $companyName, $domain);
 		// Import the file, which includes saving the file to the file system.
 		$imported_file_path = IO::saveImport($settings, $job_id);
 		if ($imported_file_path)
 		{
+      echo '<p>got an import file path</p>';
 			// Segment the imported file.
 			IO::segmentFile($settings, $job_id);
 			// Get the info into the database.
@@ -101,7 +107,7 @@ if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploa
 		// Forward to view.
 		$host  = $_SERVER['HTTP_HOST'];
 		//$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-		$extra = Settings::path_to_public_html($_SERVER).'/author/view/'.$job_id.'/analyse/';
+		$extra = $domain_root.'/author/view/'.$job_id.'/analyse/';
 		header("Location: http://$host$uri$extra");
 	}
 	else 
@@ -113,7 +119,6 @@ if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploa
 else if (!empty($_POST['import_textarea']))
 {
 	// Import the text written in the text area
-	$settings = new Settings();
 	$sql = new MySQLHandler();
 	$sql->init();
 	$q = 'INSERT INTO jobs(author_name, email_address, domain) VALUES("'.$name.'", "'.$email.'", "'.$domain.'")';
@@ -139,7 +144,7 @@ else if (!empty($_POST['import_textarea']))
 		// Forward to view.
 		$host  = $_SERVER['HTTP_HOST'];
 		//$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-		$extra = Settings::path_to_html($_SERVER).'/author/view/'.$job_id.'/analyse/';
+		$extra = $domain_root.'/author/view/'.$job_id.'/analyse/';
 		header("Location: http://$host$uri$extra");
 	}
 }

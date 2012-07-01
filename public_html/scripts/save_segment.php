@@ -10,7 +10,7 @@
  * @author: David O Carroll
  */
 
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
 
 /*
  * Input param $job_segment arrives in the form of "jobid_segmentid". This was the easiest way to submit

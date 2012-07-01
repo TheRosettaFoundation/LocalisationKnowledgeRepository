@@ -8,7 +8,10 @@
  * Script used to pass a job to the PM
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 $job_id = intval(IO::get_val('job_id'));
 $job = new Job($job_id);
@@ -35,7 +38,6 @@ $CNLF_id = $job->getCNLFid();
 if($CNLF_id != null)
 {
 	header ("Content-Type:text/html; charset=utf-8");
-	$settings = new Settings();
 	$request = new HTTP_Request2($settings->get('cnlf.url').'/send_feedback.php', HTTP_Request2::METHOD_GET);
 	$request->setHeader('Accept-Charset', 'utf-8');
 	$url = $request->getUrl();
@@ -55,5 +57,5 @@ if($CNLF_id != null)
 	}
 }
 $server = IO::server();
-header('Location: '.$server.'author/completed/'.$job_id.'/' ) ;
+header('Location: '.$domain_root.'/author/completed/'.$job_id.'/' ) ;
 die;

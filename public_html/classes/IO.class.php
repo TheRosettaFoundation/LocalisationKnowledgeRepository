@@ -61,9 +61,18 @@ class IO {
 		$srx = $settings->get('files.srx');
 		$language = $settings->get('files.language');
 
+    $prog = htmlspecialchars("\"$segmenter\" -s \"$srx\" -l $language -b \"<segment>\" -e \"</segment>\" -i \"$input_file\" -o \"$output_file\"");
+    //$prog = "\"$segmenter\" -s \"$srx\" -l $language -b \"&lt;segment&gt;\" -e \"&lt;/segment&gt;\" -i \"$input_file\" -o \"$output_file\"";
+    echo '<p>'.$prog.'</p>';
+
 		// Create the segmented file by running the segmenter from the command line
-		$output = shell_exec("\"$segmenter\" -s \"$srx\" -l $language -b \"<segment>\" -e \"</segment>\" -i \"$input_file\" -o \"$output_file\"");
-						
+		$output = shell_exec(escapeshellcmd($prog));
+    if($output == NULL) {
+      echo "<p>Segmenter failed, output is null</p>";
+    } else {
+      echo "<p>".$output."</p>";
+    }
+
 		// Add XML elements to the output file to complete it.
 		// Implemented for smaller files that can be taken into memory.
 		

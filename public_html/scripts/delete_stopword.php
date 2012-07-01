@@ -8,7 +8,10 @@
  * A script used to delete a custom guideline from the database
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 $stopword_id = intval(IO::get_val('stopword_id'));
 $sql = new MySQLHandler();
@@ -16,5 +19,5 @@ $sql->init();
 $q = 'DELETE FROM stopwords
 		WHERE stopword_id = '.$stopword_id;
 $sql->Delete($q);
-header('Location: /pm/configuration/guidelines/');
+header('Location: '.$domain_root.'/pm/configuration/guidelines/');
 die;

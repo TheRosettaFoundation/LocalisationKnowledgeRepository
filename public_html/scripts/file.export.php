@@ -14,7 +14,7 @@
  * @author: David O Carroll
  * Modified by: Eoin Ó Conchúir
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
 
 $job_id = intval(IO::get_val('job_id'));
 $job = new Job($job_id);
@@ -162,10 +162,13 @@ else if (isset($_POST['save_to_locconnect']))
 	}
 }
 
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
+
 if(isset($_POST['done']))
 {
 	//Go back to PM Central
-	header('Location: /pm/');
+	header('Location: '.$domain_root.'/pm/');
 }
 else
 {
@@ -174,5 +177,5 @@ else
 }
 
 //Reload page when finished
-header('Location: /pm/export/'.$job_id.'/');
+header('Location: '.$domain_root.'/pm/export/'.$job_id.'/');
 die;

@@ -11,10 +11,13 @@
  */
 //serror_reporting(E_ALL);
 //ini_set('display_errors', '1');
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
 //get a list of jobs from the CNLF server
 header ("Content-Type:text/html; charset=utf-8");
+
 $settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
+
 $request = new HTTP_Request2($settings->get('cnlf.url').'/fetch_job.php', HTTP_Request2::METHOD_GET);
 $request->setHeader('Accept-Charset', 'utf-8');
 $url = $request->getUrl();
@@ -139,5 +142,5 @@ if($job_ids)
 	}
 }
 // Go back to author central
-header('Location: /author/');
+header('Location: '.$domain_root.'/author/');
 die;

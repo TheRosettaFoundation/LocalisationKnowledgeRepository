@@ -8,7 +8,10 @@
  * This is used to turn on/off guideline settings
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 if(isset($_POST['submit']))
 {
@@ -96,7 +99,7 @@ if(isset($_POST['submit']))
 if($CNLF_id == '')
 {
 	//Return to PM central
-	header('Location: /pm/' ) ;
+	header('Location: '.$domain_root.'/pm/' ) ;
 }
 else
 {

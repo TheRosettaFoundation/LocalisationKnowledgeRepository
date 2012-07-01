@@ -8,7 +8,10 @@
  * Script used to add new stopwords
  * @author: David O Carroll
  */
-require($_SERVER['DOCUMENT_ROOT'].'/scripts/init.php');
+require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
 
 // If the form was used
 if(isset($_POST['operation']))
@@ -83,7 +86,7 @@ if(isset($_POST['operation']))
 	}
 	elseif($operation == 'Cancel')
 	{
-		header('Location: /pm/configuration/guidelines/');
+		header('Location: '.$domain_root.'/pm/configuration/guidelines/');
 		die;
 	}
 	else
@@ -92,5 +95,5 @@ if(isset($_POST['operation']))
 	}
 }
 // Go back a page
-header('Location: /pm/configuration/guidelines/');
+header('Location: '.$domain_root.'/pm/configuration/guidelines/');
 die;

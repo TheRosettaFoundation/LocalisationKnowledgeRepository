@@ -17,12 +17,15 @@
 //ini_set('display_errors', '1');
 
 require(__DIR__.'/init.php');
+
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
+
 if(isset($_POST['submit']) && ($_POST['submit'] == 'Import') && isset($_POST['job']))
 {
 	$job_ids = $_POST['job'];		//this returns an array of cnlf job ids
 	if($job_ids)					//or false if there aren't any
 	{
-		$settings = new Settings();
 		//find the ids of the jobs that were selected
 		foreach($job_ids as $solas_job_id)	//for every job id create a new job in the lkr
 		{
@@ -114,4 +117,4 @@ if(isset($_POST['submit']) && ($_POST['submit'] == 'Import') && isset($_POST['jo
 		} // foreach
 	}
 }
-header('Location: ../author/');
+header('Location: '.$domain_root.'/author/');
