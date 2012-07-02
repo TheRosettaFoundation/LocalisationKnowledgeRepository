@@ -17,10 +17,11 @@ $db['show_errors'] = 'y';
 $db['show_sql'] = 'n';
 $db['log_file'] = '';
 
-$files['dir_raw'] = $_SERVER['DOCUMENT_ROOT'].'/files/raw';
-$files['dir_segmented'] = $_SERVER['DOCUMENT_ROOT'].'/files/segmented';
-$files['segmenter'] = $_SERVER['DOCUMENT_ROOT'].'/segment-java/bin/segment';
-$files['srx'] = $_SERVER['DOCUMENT_ROOT'].'/segment-java/example/simple.srx';
+// File locations
+$files['dir_raw'] = __DIR__.'/../files/raw'; // Ensure the folder is writable.
+$files['dir_segmented'] = __DIR__.'/../files/segmented'; // Ensure the folder is writable.
+$files['segmenter'] = __DIR__.'/../segment-java/bin/segment';
+$files['srx'] = __DIR__.'/../segment-java/example/simple.srx';
 $files['language'] = 'english';
 
 /*
