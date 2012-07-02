@@ -26,7 +26,12 @@ $settings = new Settings();
 		{
 			echo $params['extra_scripts'];
 		} 
-	?>
+	    
+        if (isset($params['head-extra'])) {
+            echo $params['head-extra'];
+        }
+    ?>
+
 	<!-- 
 		Hello source readers. Nice to meet you. 
 		

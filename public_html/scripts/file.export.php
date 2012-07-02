@@ -16,6 +16,9 @@
  */
 require(__DIR__.'/init.php');
 
+$settings = new Settings();
+$domain_root = $settings->path_to_domain_root($_SERVER);
+
 $job_id = intval(IO::get_val('job_id'));
 $job = new Job($job_id);
 
@@ -162,20 +165,10 @@ else if (isset($_POST['save_to_locconnect']))
 	}
 }
 
-$settings = new Settings();
-$domain_root = $settings->path_to_domain_root($_SERVER);
-
-if(isset($_POST['done']))
-{
-	//Go back to PM Central
+//Reload page when finished or return to pm central if finished
+if(isset($_POST['done'])) {
 	header('Location: '.$domain_root.'/pm/');
+} else {
+    header('Location: '.$domain_root.'/pm/export/'.$job_id.'/');
 }
-else
-{
-	//Not a valid form entry
-	echo 'invalid operation';
-}
-
-//Reload page when finished
-header('Location: '.$domain_root.'/pm/export/'.$job_id.'/');
 die;

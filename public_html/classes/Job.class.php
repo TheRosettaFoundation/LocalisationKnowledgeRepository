@@ -872,6 +872,8 @@ class Job {
 	{
 		if(!$this->isClosed())
 		{
+            $settings = new Settings();
+            $domain_root = $settings->path_to_domain_root($_SERVER);
 			$warningCount = $this->countWarnings($report);
 			$fixedWarnings = $this->fixedWarningsCount($warningCount);
 			if($fixedWarnings < 0)

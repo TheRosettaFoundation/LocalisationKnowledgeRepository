@@ -560,7 +560,7 @@ class Report
 	private function generateRecommendation($report_name, $params)
 	{
 		$ret = false;
-		$filename = $_SERVER['DOCUMENT_ROOT'].'/includes/recommendations/'.$report_name.'.php';
+		$filename = __DIR__.'/../includes/recommendations/'.$report_name.'.php';
 		if (is_file($filename))
 		{
 			ob_start();

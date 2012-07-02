@@ -22,7 +22,13 @@ $cnlf = intval(IO::get_val('cnlf'));
 $job = new Job($job_id);
 $header = array('title' => 'LKR - Job '.$job_id,
 				'extra_scripts' => '<script type="text/javascript" src="'.$domain_root.'/resources/js/jquery.jeditable.js"></script>
-				 					<script type="text/javascript" src="'.$domain_root.'/resources/js/editable.js"></script>'
+				 					<script type="text/javascript" src="'.$domain_root.'/resources/js/editable.js"></script>',
+                                    'head-extra' => '<script type="text/javascript"> 
+                                                         $(document).ready( function() { 
+                                                             startEditable("'.$domain_root.'"); 
+                                                         });
+                                                     </script>'
+
 );
 Template::header($header);
 

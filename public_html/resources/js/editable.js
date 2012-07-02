@@ -6,14 +6,14 @@
  * not be reproduced, displayed, modified or distributed without the      *
  * express prior written permission of the copyright holder.              *
  *------------------------------------------------------------------------*/
-$(document).ready(function() {
+function startEditable(domain_root) {
 	// Setup editable divs. Any div with class .edit_area will be editable.
-	$('.edit_area').editable('/scripts/save_segment.php', {
+	$('.edit_area').editable(domain_root+'/scripts/save_segment.php', {
 		type      : 'textarea',
 		cancel    : 'Cancel',
 		submit    : 'OK',
 		placeholder: '',
-		indicator : '<img src="img/indicator.gif">'
+		indicator : '<img src="'+domain_root+'/img/indicator.gif">'
 	});
 
 	// Highlight the currently selected segment based on the anchor.
@@ -40,10 +40,11 @@ $(document).ready(function() {
 	}
 		
 
-});
+}
 
 /* Manually create a click event on an editable area, let's you edit empty divs. */
 function editComment(job_id, segment_id)
 {
 	$('div#'+job_id+'_'+segment_id+'_comment').click();
 }
+
