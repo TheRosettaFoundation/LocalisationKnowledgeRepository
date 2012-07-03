@@ -39,24 +39,41 @@ echo '<form action="'.$settings->path_to_domain_root($_SERVER).'/scripts/file.up
 	<h3>Create a Job</h3>
 	<p>
 <?php
+    $a_name = '';
+    $e_address = '';
+    $domain = '';
+    $c_name = '';
 	echo '*Full Name:<br />';
-	echo '<input name="full_name" type="textarea" value="'.$_COOKIE['author_name'].'"/>';
+	if(isset($_COOKIE['author_name'])) {
+		$a_name = $_COOKIE['author_name'];
+	}
+	echo '<input name="full_name" type="textarea" value="'.$a_name.'"/>';
 	if($action == 'invalid_name')//Full Name field is a mandatory field
 	{
 		echo '<div class="status"> Invalid Author Name</div>';
 	}
 	echo '<br>';
-?>
-	</p>
-	<p>
-		Email:<br /> <input name="email" type="textarea" value="<?php echo $_COOKIE['email_address'];?>"/><br>
-	</p>
-	<p>
-		Domain:<br /> <input name="domain" type="textarea" value="<?php echo $_COOKIE['domain'];?>"/><br>
-	</p>
-	<p>
-		Company/Product Name: <br /> <input name='company_name' type='textarea' value="<?php echo $_COOKIE['company_name']; ?>" /><br />
-	</p>
+
+	echo '</p>';
+	echo '<p>';
+    if(isset($_COOKIE['email_address'])) {
+        $e_address = $_COOKIE['email_address'];
+    }
+	echo 'Email:<br /> <input name="email" type="textarea" value="'.$e_address.'"/><br>';
+	echo '</p>';
+	echo '<p>';
+    if(isset($_COOKIE['domain'])) {
+        $domain = $_COOKIE['domain'];
+    }
+	echo 'Domain:<br /> <input name="domain" type="textarea" value="'.$domain.'"/><br>';
+	echo '</p>';
+	echo '<p>';
+    if(isset($_COOKIE['company_name'])) {
+        $c_name = $_COOKIE['company_name'];
+    }
+	echo 'Company/Product Name: <br /> <input name="company_name" type="textarea" value="'.$c_name.'" /><br />';
+	echo '</p>';
+    ?>
 	<p>1. Upload a .txt file:</p>
 	<blockquote>
 		<p>

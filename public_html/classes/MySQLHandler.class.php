@@ -43,7 +43,7 @@ class MySQLHandler {
 		$this->LOGGING = (strlen($this->LOGFILE)>0) ? true : false;
 		$this->SHOW_ERRORS = ($settings->get('db.show_errors') == 'y') ? true : false;
 		$this->SHOW_SQL = ($settings->get('db.show_sql') == 'y') ? true : false;
-		
+
 	}
 	###########################################
 	# Function:    init

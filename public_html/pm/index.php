@@ -18,11 +18,11 @@ $settings = new Settings();
 $domain_root = $settings->path_to_domain_root($_SERVER);
 
 echo '<h2>Project Manager Central</h2>';
-$action = IO::get_val(action);
+$action = IO::get_val('action');
 if($action == "sentback")
 {
 	//a job was recently sent back for more work
-	$job_id = IO::get_val(job_id);
+	$job_id = IO::get_val('job_id');
 	echo '<p class="highlight">Job '.$job_id.' has been sent back to the author for improvement.</p>';
 }
 ?>

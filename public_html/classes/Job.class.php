@@ -287,7 +287,7 @@ class Job {
 	/*
 	 * Returns an array of the last five completed jobs
 	 */
-	public function getCompletedJobs()
+	static public function getCompletedJobs()
 	{
 		$sql = new MySQLHandler();
 		$sql->init();
@@ -311,7 +311,7 @@ class Job {
 	/*
 	 * Returns an array of the last five closed jobs
 	 */
-	public function getClosedJobs()
+	public static function getClosedJobs()
 	{
 		$sql = new MySQLHandler();
 		$sql->init();
