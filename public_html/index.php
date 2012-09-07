@@ -19,7 +19,7 @@ $settings = new Settings();
 <p>The Localisation Knowledge Repository (LKR) is a pre-translation quality assurance system designed to facilitate the development of usable, readable and translatable source language digital content.</p>
 <p>The LKR operates as a web application enabling authors and project managers to improve the quality of source language content, in order to reduce the time and resources required to localise it for international audiences.</p>
 
-<h3><a href="<?php echo $settings->path_to_domain_root($_SERVER) ?>/login.php">Test Area</a></h3> 
+<h3><a href="<?php echo $settings->path_to_domain_root($_SERVER) ?>/login.php">SOLAS Area</a></h3> 
 <p>Upload a text file, segment into a string list, run a series of quality checks, rectify any errors identified, extract an edited text file, and generate an XLIFF-based project file.</p>
 
 <h3><a href="<?php echo $settings->path_to_domain_root($_SERVER) ?>/digital_library.php">Digital Library</a></h3>
