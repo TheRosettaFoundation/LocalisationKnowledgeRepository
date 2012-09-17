@@ -62,14 +62,8 @@ class IO {
 		$language = $settings->get('files.language');
 
         $prog = "\"$segmenter\" -s \"$srx\" -l $language -b \"<segment>\" -e \"</segment>\" -i \"$input_file\" -o \"$output_file\" 2>&1";
-       // $prog = "\"$segmenter\" -s \"$srx\" -l $language -b \"&lt;segment&gt;\" -e \"&lt;/segment&gt;\" -i \"$input_file\" -o \"$output_file\"";
-        echo '<p>'.$prog.'</p>';
 
 		// Create the segmented file by running the segmenter from the command line
-		//$output = shell_exec($prog)
-
-      
-
 		$output = shell_exec($prog);
         if($output == NULL) {
           echo "<p>Segmenter failed, output is null</p>";
