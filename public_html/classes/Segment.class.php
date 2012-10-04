@@ -124,6 +124,25 @@ class Segment {
 				AND job_id = '.$this->getJobID();
 		$sql->Update($q);
 	}
+
+    /*
+     * Returns 1 if the segment is translatable
+     * Returns 0 if the segment is not
+     */
+    function isTranslatable()
+    {
+        $db = new MySQLHandler();
+        $db->init();
+        $q = "SELECT translate
+                FROM segments
+                WHERE segment_id = ".$this->getSegmentID()."
+                AND job_id = ".$this->getJobID();
+        if($ret = $db->Select($q)) {
+            $ret = $ret[0][0];
+        }
+
+        return $ret;
+    }
 	
 	/*
 	 * Return the target_raw column from DB
@@ -241,13 +260,14 @@ class Segment {
 		return (count($sentences) > 1) ? $sentences : false;
 	}
 	
-	public static function insert(&$sql, $job_id, $text, $trans_unit_id = false)
+	public static function insert(&$sql, $job_id, $text, $trans_unit_id = false, $translate = 1)
 	{
 		$segment = array();
 		$segment['job_id'] = $sql->cleanse($job_id);
 		$segment['source_raw'] = '\''.$sql->cleanseHTML($text).'\'';
 		$segment['source'] = '\''.$sql->cleanseHTML(trim($text)).'\'';
 		$segment['target_raw'] = '\''.$sql->cleanseHTML($text).'\'';
+        $segment['translate'] = $sql->cleanse($translate);
 		if (!empty($trans_unit_id))
 		{
 			$segment['trans_unit_id'] = '\''.$sql->cleanse($trans_unit_id).'\'';

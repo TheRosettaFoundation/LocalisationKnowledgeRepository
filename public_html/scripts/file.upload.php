@@ -93,6 +93,10 @@ if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploa
 			echo "Couldn't import file. Please go back and try again"; die;
 		}
 	}
+    else
+    {
+        echo "Invalid File Type";
+    }
 	if ($job_id)
 	{
 		//set up initial warnings

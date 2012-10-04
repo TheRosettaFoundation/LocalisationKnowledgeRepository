@@ -88,7 +88,7 @@ if ($job)
 								//print the editable text, only highlight it if there is a warning and it is not complete
 								echo '<td class="segment_editable '.(($segment->hasWarning() && !$job->isComplete()) ? ' highlight' : '').($segment->isEdited() ? ' edited' : '').'">';
 									//if the job is complete dont allow it to be edited
-									if($job->isComplete())
+									if($job->isComplete() || !($segment->isTranslatable()))
 									{
 										echo '<div id="tooltip_'.$segment->getSegmentID().'">';
 											echo $segment->getTargetRaw();
@@ -119,6 +119,9 @@ if ($job)
 									{
 										echo $comment;
 									}
+                                    if(!$segment->isTranslatable()) {
+                                        echo "NOTE: this segment has been marked as untranslatable";
+                                    }
 								echo '</td>';
 							echo '</tr>';
 						}

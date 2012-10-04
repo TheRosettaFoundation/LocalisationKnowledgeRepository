@@ -101,7 +101,27 @@ class IO {
 
         	$segment = strip_tags($doc->saveXML($source), '<g><x><bx><ex><bpt><ept><ph><it><mrk>');
         	$trans_unit_id = $source->parentNode->getAttribute('id'); //parent
-        	Segment::insert($sql, $job_id, $segment, $trans_unit_id);
+            $parent = $source->parentNode;
+            $found = false;
+            $translate = "yes";
+            while($parent->nodeName != "body" && !$found) {
+                echo "<p>Checking ".$parent->nodeName."</p>";
+                $translate = $parent->getAttribute('translate');
+                if($translate != null) {
+                    echo "<p>translate att found</p>";
+                    $found = true;
+                }
+                $parent = $parent->parentNode;
+            }
+            if($translate == "no") {
+                echo "<p>Setting translate to false</p>";
+                $translate = 0;
+            } else {
+                echo "<p>Setting translate true</p>";
+                $translate = 1;
+            }
+
+        	Segment::insert($sql, $job_id, $segment, $trans_unit_id, $translate);
         }
 	}
 	

@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `segments` (
   `trans_unit_id` varchar(255) DEFAULT NULL,
   `comment` text,
   `has_warning` tinyint(4) DEFAULT NULL,
+  `translate` BIT(1) DEFAULT 1,
   UNIQUE KEY `job_id` (`job_id`,`segment_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

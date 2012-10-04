@@ -83,7 +83,10 @@ if ($job)
 								echo '</td>';
 								echo '<td>';
 									$comment = $segment->getComment();
-									if(!$job->isClosed())
+                                    if(!$segment->isTranslatable()) {
+                                        echo "This segment has been marked as untranslatable";
+                                    }
+									else if(!$job->isClosed())
 									{
 										// Job is open, allow the PM to add a comment
 										echo '<div class="edit_area" id="'.$job->getJobID().'_'.$segment->getSegmentID().'_comment">';
