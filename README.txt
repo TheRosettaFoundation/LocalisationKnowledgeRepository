@@ -36,6 +36,7 @@ installed.
 * Edit /etc/php5/apache2/php.ini, changing the include_path to as
 follows:
 	include_path = ".:/usr/share/php:/usr/share/php/PEAR"
+* If this is not installed on a lampp installation then there may be a conflict between some of the modules enabled by default. If you have problems viewing certain pages (author view for example) then disable MultiViews.
 
 --- Environment configuration ------------------------------------------
 MySQL:
