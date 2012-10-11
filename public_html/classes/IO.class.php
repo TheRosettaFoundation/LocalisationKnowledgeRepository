@@ -104,7 +104,7 @@ class IO {
             $parent = $source->parentNode;
             $found = false;
             $translate = "yes";
-            while($parent->nodeName != "body" && !$found) {
+            while(strcasecmp($parent->nodeName, "file") != 0 && !$found) {
                 echo "<p>Checking ".$parent->nodeName."</p>";
                 $translate = $parent->getAttribute('translate');
                 if($translate != null) {
