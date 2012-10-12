@@ -98,7 +98,6 @@ class IO {
 		$doc->loadXML($xliff_str);
         foreach($doc->getElementsByTagName('source') as $source)
         {
-
         	$segment = strip_tags($doc->saveXML($source), '<g><x><bx><ex><bpt><ept><ph><it><mrk>');
         	$trans_unit_id = $source->parentNode->getAttribute('id'); //parent
             $parent = $source->parentNode;

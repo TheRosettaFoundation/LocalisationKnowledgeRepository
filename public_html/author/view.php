@@ -83,7 +83,7 @@ if ($job)
 								echo '<td class="segment_nb"><a name="seg_'.$segment->getSegmentID().'">'.$segment->getSegmentID().'</a></td>';
 								//print the original text
 								echo '<td class="segment_original">';
-									echo $segment->getSourceRaw();
+									echo $segment->getSourceParsed();
 								echo '</td>';
 								//print the editable text, only highlight it if there is a warning and it is not complete
 								echo '<td class="segment_editable '.(($segment->hasWarning() && !$job->isComplete()) ? ' highlight' : '').($segment->isEdited() ? ' edited' : '').'">';
@@ -147,6 +147,8 @@ if ($job)
 	<?php
 	// reShow this at the bottom of the table for usability
 	$job->printAuthorStatusBar($report);
+    echo "<br />";
+    $job->printLegend();
 echo '</p>';
 }
 Template::footer();

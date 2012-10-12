@@ -804,6 +804,25 @@ class Job {
 		}
 		return array( 'days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds);
 	}
+
+    /*
+     * This function prints the legend for views
+     */
+    public function printLegend()
+    {
+        echo "<center>";
+            echo "<h3>Legend</h3>";
+        echo "</center>";
+        echo "<table border='0' cellpadding='3' cellspacing='0' align='center'>";
+            echo "<tbody>";
+                echo "<tr><td>Format</td><td>Meaning</td></tr>";
+                echo "<tr>";
+                    echo "<td class='no-translate'>Sample</td>";
+                    echo "<td>Text marked as \"Do not translate\"</td>";
+                echo "</tr>";
+            echo "</tbody>";
+        echo "</table>";
+    }
 	
 	/*
 	 * This function prints the status bar for the author's view

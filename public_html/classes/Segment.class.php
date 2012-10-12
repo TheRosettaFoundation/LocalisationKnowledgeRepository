@@ -49,6 +49,50 @@ class Segment {
 		$ret = $sql->Select($q);
 		return $ret[0][0];
 	}
+
+    /*
+     * Get the raw source text, parse it for ITS rules and replace its
+     * tags with HTML for display
+     */
+    function getSourceParsed()
+    {
+        $source_raw = "<source>".$this->getSourceRaw()."</source>";
+        $source_parsed = "";
+        $doc = new DOMDocument();
+        $doc->loadXML($source_raw);
+        $source = $doc->getElementsByTagName("source")->item(0);
+        if($source->hasChildNodes()) {
+            $child = $source->firstChild;
+            while($child != NULL) {
+                if(strcasecmp($child->nodeName, "mrk") == 0) {
+                    $mtype = $child->getAttribute("mtype");
+                    if($mtype != NULL) {
+                        if(strcasecmp($mtype, "phrase") == 0) {
+                            $source_parsed .= " ".$child->nodeValue;
+                            $ref = $child->getAttribute("url");
+                            if($ref == NULL) {
+                                $ref = $child->getAttribute("disambigIdentRef");
+                            }
+                            if($ref != NULL) {
+                                $source_parsed .= "<sup><a target='_blank' href='$ref'>[ref]</a></sup>";
+                            }
+                        } else if(strcasecmp($mtype, "x-DNT") == 0 || strcasecmp($mtype, "preserve") == 0) {
+                            $source_parsed .= " <span class='no-translate'>";
+                            $source_parsed .= $child->nodeValue;
+                            $source_parsed .= "</span>";
+                        }
+                    }
+                } else {
+                    $source_parsed .= " ".$child->nodeValue;
+                }
+                $child = $child->nextSibling;
+            }
+        } else {
+            echo "<p>No Child nodes found</p>";
+        }
+
+        return $source_parsed;
+    }
 	
 	/*
 	 * Returns the source column
