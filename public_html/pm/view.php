@@ -73,7 +73,7 @@ if ($job)
 								// Print the segment id
 								echo '<td class="segment_nb">'.$segment->getSegmentID().'</td>';		
 								echo '<td>';
-									echo $segment->getSourceRaw();
+									echo $segment->getSourceParsed();
 								echo '</td>';
 								//if it has a warning highlight it, if it has been edited mark it
 								echo '<td class="'.((!$job->isClosed() && $segment->hasWarning()) ? ' highlight' : '').($segment->isEdited() ? ' edited' : '').'">';
@@ -122,6 +122,8 @@ if ($job)
 	<br />
 <?php	
 $job->printPMStatusBar($report, $cnlf);
+echo "<br />";
+$job->printLegend();
 }
 Template::footer();
 ?>
