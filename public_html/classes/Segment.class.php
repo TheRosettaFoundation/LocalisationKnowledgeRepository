@@ -73,6 +73,9 @@ class Segment {
                             if($ref == NULL) {
                                 $ref = $child->getAttribute("disambigIdentRef");
                             }
+                            if($ref == NULL) {
+                                $ref = $child->getAttribute("comment");
+                            }
                             if($ref != NULL) {
                                 $source_parsed .= "<sup><a target='_blank' href='$ref'>[ref]</a></sup>";
                             }
