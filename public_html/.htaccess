@@ -4,7 +4,7 @@ php_value error_reporting 7
 php_flag display_errors on 
 
 RewriteEngine On
-
+#RewriteRule ^(.*)$ http://google.ie
 RewriteRule ^author/view/([0-9]+)/$ author/view.php?job_id=$1
 RewriteRule ^author/view/([0-9]+)/analyse/$ author/view.php?job_id=$1&analyse=1
 

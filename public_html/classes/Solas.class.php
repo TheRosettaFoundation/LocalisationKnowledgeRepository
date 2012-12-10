@@ -28,18 +28,13 @@ class Solas
 			// $response contains an XML document. Within the <content> 
 			// tags is the XLIFF content.
 			$xliff_xml = false;
-			$xliff_container = new SimpleXMLElement($response);			
-			foreach($xliff_container->children() as $child)
-			{
-				if ($child->getName() == 'xliff')
-				{
-					$xliff_xml = $child->asXML();
-				}
-			}
+			$xliff_container = new DOMDocument();
+                        $xliff_container->loadXML($response);
+                        $xliff_xml=$xliff_container->getElementsByTagName("xliff")->item(0);
 			if ($xliff_xml)
 			{
-				// Success. Return the XLIFF string.
-				$ret = $xliff_xml;
+                            // Success. Return the XLIFF string.
+                            $ret = $xliff_container->saveXML($xliff_xml);
 			}
 		}
 		return $ret;		

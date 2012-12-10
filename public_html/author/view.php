@@ -9,6 +9,7 @@
  * Here the author edits the job in adherence to the guidelines attached to each segment
  * @author: David O Carroll
  */
+
 require(__DIR__.'/../scripts/init.php');
 $settings = new Settings();
 $domain_root = $settings->path_to_domain_root($_SERVER);
@@ -38,6 +39,7 @@ if ($analyse)
 	}
 }
 ?>
+
 <h2>Job <?php echo $job->getJobID(); ?></h2>
 <?php
 // Print the number of warnings and the actions that can be taken
