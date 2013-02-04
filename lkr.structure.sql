@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS `segments` (
   `source` text CHARACTER SET latin1 NOT NULL,
   `edited` tinyint(1) DEFAULT NULL,
   `target_raw` text CHARACTER SET latin1,
+  `file_id` int(10) unsigned DEFAULT 1,
   `trans_unit_id` varchar(255) DEFAULT NULL,
   `comment` text,
   `has_warning` tinyint(4) DEFAULT NULL,

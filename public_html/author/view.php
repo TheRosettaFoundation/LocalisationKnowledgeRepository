@@ -73,11 +73,19 @@ if ($job)
 				//for each sentence in the file...
 				if ($segments = $job->getSegments())
 				{
+                    $currentFileId = 0;
 					foreach($segments as $segment)
 					{
 						//if its not a blank line
 						if($segment->getSource() != '' || trim($segment->getTargetRaw()) != '')
 						{
+                            if ($segment->getFileID() != $currentFileId) {
+                                $currentFileId = $segment->getFileID();
+                                echo "<tr>";
+                                echo "<td></td><td></td>";
+                                echo "<td>File #$currentFileId</td>";
+                                echo "</tr>";
+                            }
 							echo '<tr id=seg_'.$segment->getSegmentID().'>';
 								//print the segment id and mark it so it can be linked from the status bar
 								echo '<td class="segment_nb"><a name="seg_'.$segment->getSegmentID().'">'.$segment->getSegmentID().'</a></td>';
@@ -90,7 +98,7 @@ if ($job)
 									//if the job is complete dont allow it to be edited
 									if($job->isComplete() || !($segment->isTranslatable()))
 									{
-										echo '<div id="tooltip_'.$segment->getSegmentID().'">';
+										echo '<div id="tooltip_'.$segment->getSegmentID().'" class="no-translate">';
 											echo $segment->getTargetRaw();
 										echo '</div>';
 									} 

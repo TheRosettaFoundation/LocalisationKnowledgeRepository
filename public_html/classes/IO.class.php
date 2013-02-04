@@ -96,31 +96,35 @@ class IO {
 		// Parse the XML, extracting the segment text.
 		$doc = new DOMDocument();
 		$doc->loadXML($xliff_str);
-        foreach($doc->getElementsByTagName('source') as $source)
-        {
-        	$segment = strip_tags($doc->saveXML($source), '<g><x><bx><ex><bpt><ept><ph><it><mrk>');
-        	$trans_unit_id = $source->parentNode->getAttribute('id'); //parent
-            $parent = $source->parentNode;
-            $found = false;
-            $translate = "yes";
-            while(strcasecmp($parent->nodeName, "file") != 0 && !$found) {
-                echo "<p>Checking ".$parent->nodeName."</p>";
-                $translate = $parent->getAttribute('translate');
-                if($translate != null) {
-                    echo "<p>translate att found</p>";
-                    $found = true;
+        $fileId = 1;
+        foreach($doc->getElementsByTagName("file") as $file) {
+            foreach($file->getElementsByTagName('source') as $source)
+            {
+           	    $segment = strip_tags($doc->saveXML($source), '<g><x><bx><ex><bpt><ept><ph><it><mrk>');
+              	$trans_unit_id = $source->parentNode->getAttribute('id'); //parent
+                $parent = $source->parentNode;
+                $found = false;
+                $translate = "yes";
+                while(strcasecmp($parent->nodeName, "file") != 0 && !$found) {
+                    echo "<p>Checking ".$parent->nodeName."</p>";
+                    $translate = $parent->getAttribute('translate');
+                    if($translate != null) {
+                        echo "<p>translate att found</p>";
+                        $found = true;
+                    }
+                    $parent = $parent->parentNode;
                 }
-                $parent = $parent->parentNode;
-            }
-            if($translate == "no") {
-                echo "<p>Setting translate to false</p>";
-                $translate = 0;
-            } else {
-                echo "<p>Setting translate true</p>";
-                $translate = 1;
-            }
+                if($translate == "no") {
+                    echo "<p>Setting translate to false</p>";
+                    $translate = 0;
+                } else {
+                    echo "<p>Setting translate true</p>";
+                    $translate = 1;
+                }
 
-        	Segment::insert($sql, $job_id, $segment, $trans_unit_id, $translate);
+        	    Segment::insert($sql, $job_id, $segment, $fileId, $trans_unit_id, $translate);
+            }
+            $fileId++;
         }
 	}
 	

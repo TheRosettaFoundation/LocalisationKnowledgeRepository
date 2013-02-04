@@ -111,6 +111,21 @@ class Segment {
 		$ret = $sql->Select($q);
 		return $ret[0][0];
 	}
+
+    /*
+     * Returns the file id of this segment
+     */
+    function getFileId()
+    {
+        $sql = new MySQLHandler();
+        $sql->init();
+        $q = 'SELECT file_id
+                FROM segments
+                WHERE segment_id = '.$this->getSegmentID().'
+                AND job_id = '.$this->getJobID();
+        $ret = $sql->Select($q);
+        return $ret[0][0];
+    }
 	
 	/* 
 	 * Return the trans-unit id for this segment. Such a value will be
@@ -307,7 +322,7 @@ class Segment {
 		return (count($sentences) > 1) ? $sentences : false;
 	}
 	
-	public static function insert(&$sql, $job_id, $text, $trans_unit_id = false, $translate = 1)
+	public static function insert(&$sql, $job_id, $text, $fileId = 1, $trans_unit_id = false, $translate = 1)
 	{
 		$segment = array();
 		$segment['job_id'] = $sql->cleanse($job_id);
@@ -315,6 +330,7 @@ class Segment {
 		$segment['source'] = '\''.$sql->cleanseHTML(trim($text)).'\'';
 		$segment['target_raw'] = '\''.$sql->cleanseHTML($text).'\'';
         $segment['translate'] = $sql->cleanse($translate);
+        $segment['file_id'] = $sql->cleanse($fileId);
 		if (!empty($trans_unit_id))
 		{
 			$segment['trans_unit_id'] = '\''.$sql->cleanse($trans_unit_id).'\'';
