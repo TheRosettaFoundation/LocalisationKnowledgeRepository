@@ -68,6 +68,29 @@ if ($job)
 						// Check if there is any text in the segment
 						if($segment->getSource() != '' || trim($segment->getTargetRaw()) != '')
 						{
+                            if ($segment->getFileID() != $currentFileId) {
+                                $currentFileId = $segment->getFileID();
+                                echo "<tr>";
+                                echo "<td></td><td></td>";
+                                echo "<td>File #$currentFileId</td>";
+                                echo "</tr>";
+                                $refs = $job->getAnnotatorsRefs($currentFileId);
+                                if ($refs && count($refs) > 0) {
+                                    echo "<tr>";
+                                    echo "<td></td>";
+                                    echo "<td>Annotator References:</td>";
+                                    echo "<td></td>";
+                                    echo "</tr>";
+                                    foreach ($refs as $ref) {
+                                        echo "<tr>";
+                                        echo "<td></td>";
+                                        echo "<td>".$ref->getCategory()."</td>";
+                                        $href = $ref->getRef();
+                                        echo "<td><a target='_blank' href='$href'>$href</a></td>";
+                                        echo "</tr>";
+                                    }
+                                }
+                            }
 							//if there is print it, otherwise ignore the segment altogether
 							echo '<tr>';
 								// Print the segment id

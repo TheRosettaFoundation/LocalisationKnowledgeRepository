@@ -839,6 +839,10 @@ class Job {
                     echo "<td class='no-translate'>Sample</td>";
                     echo "<td>Text marked as \"Do not translate\"</td>";
                 echo "</tr>";
+                echo "<tr>";
+                    echo "<td class='comment'>Comment</td>";
+                    echo "<td>Hover of this text for a comment</td>";
+                echo "</tr>";
             echo "</tbody>";
         echo "</table>";
     }
