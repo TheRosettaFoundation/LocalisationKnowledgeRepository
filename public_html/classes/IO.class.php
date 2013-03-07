@@ -102,17 +102,28 @@ class IO {
             {
            	    $segment = strip_tags($doc->saveXML($source), '<g><x><bx><ex><bpt><ept><ph><it><mrk>');
               	$trans_unit_id = $source->parentNode->getAttribute('id'); //parent
-                $parent = $source->parentNode;
+                $parent = $source;
                 $found = false;
                 $translate = "yes";
                 while(strcasecmp($parent->nodeName, "file") != 0 && !$found) {
+                    $parent = $parent->parentNode;
                     echo "<p>Checking ".$parent->nodeName."</p>";
                     $translate = $parent->getAttribute('translate');
                     if($translate != null) {
                         echo "<p>translate att found</p>";
                         $found = true;
                     }
-                    $parent = $parent->parentNode;
+                    $annotatorsRef = $parent->getAttribute('annotatorsRef');
+                    if ($annotatorsRef == NULL) {
+                        $annotatorsRef = $parent->getAttribute('its:annotatorsRef');
+                    }
+                    if ($annotatorsRef != NULL) {
+                        $category = substr($annotatorsRef, 0, strpos($annotatorsRef, "|"));
+                        $ref = substr($annotatorsRef, strpos($annotatorsRef, "|") + 1);
+                        if (!AnnotatorsRef::exists($sql, $job_id, $fileId, $ref, $category)) {
+                            AnnotatorsRef::insert($sql, $job_id, $fileId, $ref, $category);
+                        }
+                    }
                 }
                 if($translate == "no") {
                     echo "<p>Setting translate to false</p>";

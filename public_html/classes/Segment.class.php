@@ -11,7 +11,7 @@
  */
 class Segment {
 	private $segment_id;
-	private $job;
+	private $job_id;
 	
 	function Segment($job_id, $segment_id)
 	{
@@ -79,10 +79,24 @@ class Segment {
                             if($ref != NULL) {
                                 $source_parsed .= "<sup><a target='_blank' href='$ref'>[ref]</a></sup>";
                             }
-                        } else if(strcasecmp($mtype, "x-DNT") == 0 || strcasecmp($mtype, "preserve") == 0) {
+                        } elseif(strcasecmp($mtype, "x-DNT") == 0 || strcasecmp($mtype, "preserve") == 0
+                                    || strcasecmp($mtype, "protected")) {
                             $source_parsed .= " <span class='no-translate'>";
                             $source_parsed .= $child->nodeValue;
                             $source_parsed .= "</span>";
+                        } elseif(strcasecmp($mtype, "x-its-Translate-Yes") == 0) {
+                            $source_parsed .= " <span class='translate'>";
+                            $source_parsed .= $child->nodeValue;
+                            $source_parsed .= "</span>";
+                        } elseif(strcasecmp($mtype, "x-its") || strcasecmp($mtype, "xits")) {
+                            $comment = $child->getAttribute("comment");
+                            if ($comment != "") {
+                                $source_parsed .= " <span class=\"comment\" title=\"$comment\">";
+                                $source_parsed .= $child->nodeValue;
+                                $source_parsed .= "</span>";
+                            } else {
+                                $source_parsed .= $child->nodeValue;
+                            }
                         }
                     }
                 } else {

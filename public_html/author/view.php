@@ -85,6 +85,21 @@ if ($job)
                                 echo "<td></td><td></td>";
                                 echo "<td>File #$currentFileId</td>";
                                 echo "</tr>";
+                                $refs = $job->getAnnotatorsRefs($currentFileId);
+                                if ($refs && count($refs) > 0) {
+                                    echo "<tr>";
+                                    echo "<td></td>";
+                                    echo "<td>Annotator References:</td>";
+                                    echo "</tr>";
+                                    foreach ($refs as $ref) {
+                                        echo "<tr>";
+                                        echo "<td></td>";
+                                        echo "<td>".$ref->getCategory()."</td>";
+                                        $href = $ref->getRef();
+                                        echo "<td><a target='_blank' href='$href'>$href</a></td>";
+                                        echo "</tr>";
+                                    }
+                                }
                             }
 							echo '<tr id=seg_'.$segment->getSegmentID().'>';
 								//print the segment id and mark it so it can be linked from the status bar

@@ -57,6 +57,25 @@ class Job {
 		}
 		return (count($this->segments)>0) ? true : false;
 	}
+
+    public function getAnnotatorsRefs($file_id = 1)
+    {
+        $refs = null;
+        $sql = new MySQLHandler();
+        $sql->init();
+        $q = "SELECT *
+                FROM annotatorsRefs
+                WHERE job_id = ".$sql->cleanse($this->job_id)."
+                AND file_id = ".$sql->cleanse($file_id);
+        $result = $sql->Select($q);
+        if ($result) {
+            $refs = array();
+            foreach ($result as $row) {
+                $refs[] = new AnnotatorsRef($row['ref_id'], $this->job_id);
+            }
+        }
+        return $refs;
+    }
 	
 	/*
 	 * This is a function that checks to see if any segments contain more than one sentence

@@ -61,6 +61,21 @@ CREATE TABLE IF NOT EXISTS `jobs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `annotatorsRefs`
+--
+
+CREATE TABLE IF NOT EXISTS `annotatorsRefs` (
+    `ref_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `job_id` int(10) unsigned NOT NULL,
+    `file_id` int(10) unsigned DEFAULT NULL,
+    `ref` VARCHAR(255) NOT NULL,
+    `category` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`ref_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reports`
 --
 
