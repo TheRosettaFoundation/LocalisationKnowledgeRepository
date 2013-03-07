@@ -90,6 +90,7 @@ if ($job)
                                     echo "<tr>";
                                     echo "<td></td>";
                                     echo "<td>Annotator References:</td>";
+                                    echo "<td></td>";
                                     echo "</tr>";
                                     foreach ($refs as $ref) {
                                         echo "<tr>";

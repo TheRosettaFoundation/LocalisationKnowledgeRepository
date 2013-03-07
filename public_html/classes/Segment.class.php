@@ -61,51 +61,66 @@ class Segment {
         $doc = new DOMDocument();
         $doc->loadXML($source_raw);
         $source = $doc->getElementsByTagName("source")->item(0);
-        if($source->hasChildNodes()) {
-            $child = $source->firstChild;
-            while($child != NULL) {
-                if(strcasecmp($child->nodeName, "mrk") == 0) {
-                    $mtype = $child->getAttribute("mtype");
-                    if($mtype != NULL) {
-                        if(strcasecmp($mtype, "phrase") == 0) {
-                            $source_parsed .= " ".$child->nodeValue;
-                            $ref = $child->getAttribute("url");
-                            if($ref == NULL) {
-                                $ref = $child->getAttribute("disambigIdentRef");
-                            }
-                            if($ref == NULL) {
-                                $ref = $child->getAttribute("comment");
-                            }
-                            if($ref != NULL) {
-                                $source_parsed .= "<sup><a target='_blank' href='$ref'>[ref]</a></sup>";
-                            }
-                        } elseif(strcasecmp($mtype, "x-DNT") == 0 || strcasecmp($mtype, "preserve") == 0
-                                    || strcasecmp($mtype, "protected")) {
-                            $source_parsed .= " <span class='no-translate'>";
-                            $source_parsed .= $child->nodeValue;
-                            $source_parsed .= "</span>";
-                        } elseif(strcasecmp($mtype, "x-its-Translate-Yes") == 0) {
-                            $source_parsed .= " <span class='translate'>";
-                            $source_parsed .= $child->nodeValue;
-                            $source_parsed .= "</span>";
-                        } elseif(strcasecmp($mtype, "x-its") || strcasecmp($mtype, "xits")) {
-                            $comment = $child->getAttribute("comment");
-                            if ($comment != "") {
-                                $source_parsed .= " <span class=\"comment\" title=\"$comment\">";
-                                $source_parsed .= $child->nodeValue;
-                                $source_parsed .= "</span>";
-                            } else {
-                                $source_parsed .= $child->nodeValue;
-                            }
+        $source_parsed = $this->parseElement($source);
+        return $source_parsed;
+    }
+
+    private function parseElement($node)
+    {
+        $source_parsed = "";
+        if ($node->tagName == '') {
+            $source_parsed = $node->nodeValue;
+        } else {
+            $closingTag = "";
+            if(strcasecmp($node->nodeName, "mrk") == 0) {
+                $mtype = $node->getAttribute("mtype");
+                if($mtype != NULL) {
+                    if(strcasecmp($mtype, "phrase") == 0) {
+                        $source_parsed .= " ".$node->nodeValue;
+                        $ref = $node->getAttribute("url");
+                        if($ref == NULL) {
+                            $ref = $node->getAttribute("disambigIdentRef");
+                        }
+                        if($ref == NULL) {
+                            $ref = $node->getAttribute("comment");
+                        }
+                        if($ref != NULL) {
+                            $source_parsed .= "<sup><a target='_blank' href='$ref'>[ref]</a></sup>";
+                        }
+                    } elseif(strcasecmp($mtype, "x-DNT") == 0 || strcasecmp($mtype, "preserve") == 0
+                                 || strcasecmp($mtype, "protected") == 0) {
+                        $source_parsed .= " <span class='no-translate'>";
+                        $closingTag .= "</span>";
+                    } elseif(strcasecmp($mtype, "x-its-Translate-Yes") == 0) {
+                        $source_parsed .= " <span class='translate'>";
+                        $closingTag .= "</span>";
+                    } elseif(strcasecmp($mtype, "x-its") || strcasecmp($mtype, "xits")) {
+                        $comment = $node->getAttribute("comment");
+                        if ($comment != "") {
+                            $source_parsed .= " <span class=\"comment\" title=\"$comment\">";
+                            $closingTag .= "</span>";
                         }
                     }
-                } else {
-                    $source_parsed .= " ".$child->nodeValue;
                 }
-                $child = $child->nextSibling;
             }
-        } else {
-            echo "<p>No Child nodes found</p>";
+            $annotatorsRef = $node->getAttribute("annotatorsRef");
+            if ($annotatorsRef == NULL) {
+                $annotatorsRef = $node->getAttribute("its:annotatorsRef");
+            }
+            if ($annotatorsRef != NULL) {
+                $category = substr($annotatorsRef, 0, strpos($annotatorsRef, "|"));
+                $ref = substr($annotatorsRef, strpos($annotatorsRef, "|") + 1, strlen($annotatorsRef) - 1);
+                $source_parsed .= "<a href='$ref' title='$category' target='_blank'>";
+                $closingTag .= "</a>";
+            }
+            if($node->hasChildNodes()) {
+                $child = $node->firstChild;
+                while($child != NULL) {
+                    $source_parsed .= $this->parseElement($child);
+                    $child = $child->nextSibling;
+                }
+            }
+            $source_parsed .= $closingTag;
         }
 
         return $source_parsed;
