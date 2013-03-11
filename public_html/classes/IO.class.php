@@ -125,7 +125,7 @@ class IO {
 
         $fileId = 1;
         foreach($doc->getElementsByTagName("file") as $file) {
-            foreach($file->getElementsByTagName('source') as $source)
+            foreach($file->getElementsByTagName('seg-source') as $source)
             {
            	    $segment = strip_tags($doc->saveXML($source), '<g><x><bx><ex><bpt><ept><ph><it><mrk>');
               	$trans_unit_id = $source->parentNode->getAttribute('id'); //parent
