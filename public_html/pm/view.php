@@ -145,6 +145,7 @@ if ($job)
 	<br />
 <?php	
 $job->printPMStatusBar($report, $cnlf);
+$job->printGlossaryEntries();
 echo "<br />";
 $job->printLegend();
 }
