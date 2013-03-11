@@ -74,43 +74,41 @@ class Segment {
             $closingTag = "";
             if(strcasecmp($node->nodeName, "mrk") == 0) {
                 $mtype = $node->getAttribute("mtype");
-                if($mtype != NULL) {
-                    if(strcasecmp($mtype, "phrase") == 0) {
-                        $source_parsed .= " ".$node->nodeValue;
-                        $ref = $node->getAttribute("url");
-                        if($ref == NULL) {
-                            $ref = $node->getAttribute("disambigIdentRef");
-                        }
-                        if($ref == NULL) {
-                            $ref = $node->getAttribute("comment");
-                        }
-                        if($ref != NULL) {
-                            $source_parsed .= "<sup><a target='_blank' href='$ref'>[ref]</a></sup>";
-                        }
-                    } elseif(strcasecmp($mtype, "x-DNT") == 0 || strcasecmp($mtype, "preserve") == 0
-                                 || strcasecmp($mtype, "protected") == 0) {
-                        $source_parsed .= " <span class='no-translate'>";
+                if(strcasecmp($mtype, "phrase") == 0) {
+                    $source_parsed .= " ".$node->nodeValue;
+                    $ref = $node->getAttribute("url");
+                    if($ref == NULL) {
+                        $ref = $node->getAttribute("disambigIdentRef");
+                    }
+                    if($ref == NULL) {
+                        $ref = $node->getAttribute("comment");
+                    }
+                    if($ref != NULL) {
+                        $source_parsed .= "<sup><a target='_blank' href='$ref'>[ref]</a></sup>";
+                    }
+                } elseif(strcasecmp($mtype, "x-DNT") == 0 || strcasecmp($mtype, "preserve") == 0
+                             || strcasecmp($mtype, "protected") == 0) {
+                    $source_parsed .= " <span class='no-translate'>";
+                    $closingTag .= "</span>";
+                } elseif(strcasecmp($mtype, "x-its-Translate-Yes") == 0) {
+                    $source_parsed .= " <span class='translate'>";
+                    $closingTag .= "</span>";
+                } elseif(strcasecmp($mtype, "term") == 0 || $node->getAttribute("terminology") == "yes") {
+                    $confidence = $node->getAttribute("its:termConfidence");
+                    if ($confidence == "") {
+                        $confidence = $node->getAttribute("termConfidence");
+                    }
+                    $ref = $node->getAttribute("its:termInfoRef");
+                    if ($ref == "") {
+                        $ref = $node->getAttribute("termInfoRef");
+                    }
+                    $source_parsed .= "<span class='term' title='Confidence: $confidence'>";
+                    $closingTag .= "</span><sup><a href='$ref'>[$ref]</a></sup>";
+                } elseif(strcasecmp($mtype, "x-its") || strcasecmp($mtype, "xits")) {
+                    $comment = $node->getAttribute("comment");
+                    if ($comment != "") {
+                        $source_parsed .= " <span class=\"comment\" title=\"$comment\">";
                         $closingTag .= "</span>";
-                    } elseif(strcasecmp($mtype, "x-its-Translate-Yes") == 0) {
-                        $source_parsed .= " <span class='translate'>";
-                        $closingTag .= "</span>";
-                    } elseif(strcasecmp($mtype, "term") == 0) {
-                        $confidence = $node->getAttribute("its:termConfidence");
-                        if ($confidence == "") {
-                            $confidence = $node->getAttribute("termConfidence");
-                        }
-                        $ref = $node->getAttribute("its:termInfoRef");
-                        if ($ref == "") {
-                            $ref = $node->getAttribute("termInfoRef");
-                        }
-                        $source_parsed .= "<span class='term' title='Confidence: $confidence'>";
-                        $closingTag .= "</span><sup><a href='$ref'>[$ref]</a></sup>";
-                    } elseif(strcasecmp($mtype, "x-its") || strcasecmp($mtype, "xits")) {
-                        $comment = $node->getAttribute("comment");
-                        if ($comment != "") {
-                            $source_parsed .= " <span class=\"comment\" title=\"$comment\">";
-                            $closingTag .= "</span>";
-                        }
                     }
                 }
             }
