@@ -125,10 +125,15 @@ class IO {
 
         $fileId = 1;
         foreach($doc->getElementsByTagName("file") as $file) {
-            foreach($file->getElementsByTagName('seg-source') as $source)
+            foreach($file->getElementsByTagName('trans-unit') as $transUnit)
             {
-           	    $segment = strip_tags($doc->saveXML($source), '<g><x><bx><ex><bpt><ept><ph><it><mrk>');
-              	$trans_unit_id = $source->parentNode->getAttribute('id'); //parent
+              	$trans_unit_id = $transUnit->getAttribute('id');
+                if (count($transUnit->getElementsByTagName('seg-source')) > 0) {
+                    $source = $transUnit->getElementsByTagName('seg-source')->item(0);
+                } else {
+                    $source = $transUnit->getElementsByTagName('source')->item(0);
+                }
+           	    $segment = $doc->saveXML($source);
                 $parent = $source;
                 $found = false;
                 $translate = "yes";

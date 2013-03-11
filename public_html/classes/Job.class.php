@@ -290,7 +290,17 @@ class Job {
 					{
 						if ($trans_unit->attributes()->id[0] == $trans_unit_id)
 						{
-							$trans_unit->children()->source[0] = $segment->getTargetRaw();
+                            $doc = new DOMDocument();
+                            $doc->loadXML($segment->getTargetRaw());
+                            if (count($doc->getElementsByTagName('seg-source') > 0)) {
+                                $segSource = $doc->getElementsByTagName('seg-source')->item(0);
+                                $segSource->parentNode->removeChild($segSource);
+    							$trans_unit->children()['seg-source'][0] = $doc->saveXML($segSource);
+                            } else {
+                                $source = $doc->getElementsByTagName('source')->item(0);
+                                $source->parentNode->removeChild($source);
+                                $trans_unit->children()['source'][0] = $doc->saveXML($source);
+                            }
 						}
 					}
 				}
