@@ -76,6 +76,50 @@ class Job {
         }
         return $refs;
     }
+
+    public function getGlossaryEntries()
+    {
+        $entries = null;
+        $sql = new MySQLHandler();
+        $sql->init();
+        $q = "SELECT *
+               FROM glossaryEntries
+               WHERE job_id = ".$sql->cleanse($this->job_id);
+        $result = $sql->Select($q);
+        if ($result) {
+            $refs = array();
+            foreach ($result as $row) {
+                $entries[] = new GlossaryEntry($row['glossary_id'], $this->job_id);
+            }
+        }
+        return $entries;
+    }
+
+    /*
+     * This functions prints a table of Glossary Terms
+     */
+    public function printGlossaryEntries()
+    {
+        $entries = $this->getGlossaryEntries();
+        if ($entries) {
+            echo "<center>";
+                echo "<h3>Glossary Entries</h3>";
+            echo "</center>";
+            echo "<table class='segments' border='0' cellpadding='3' cellspacing='0' align='center'>";
+            echo "<tbody>";
+            echo "<tr><th>ID</th><th>Term</th><th>Translation</th></tr>";
+            foreach ($entries as $entry) {
+                echo "<tr>";
+                echo "<td><a name=\"".$entry->getRef()."\">".$entry->getRef()."</td>";
+                echo "<td>".$entry->getTerm()."</td>";
+                echo "<td>".$entry->getTranslation()."</td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+            echo "<br />";
+        }
+    }
 	
 	/*
 	 * This is a function that checks to see if any segments contain more than one sentence
@@ -842,6 +886,10 @@ class Job {
                 echo "<tr>";
                     echo "<td class='comment'>Comment</td>";
                     echo "<td>Hover of this text for a comment</td>";
+                echo "</tr>";
+                echo "<tr>";
+                    echo "<td class='term'>Term</td>";
+                    echo "<td>This text has been marked as a term</td>";
                 echo "</tr>";
             echo "</tbody>";
         echo "</table>";

@@ -17,6 +17,7 @@ require(__DIR__.'/../classes/Template.class.php');
 require(__DIR__.'/../classes/Report.class.php');
 require(__DIR__.'/../classes/Segment.class.php');
 require(__DIR__.'/../classes/AnnotatorsRef.class.php');
+require(__DIR__.'/../classes/GlossaryEntry.class.php');
 require(__DIR__.'/../classes/Stopword.class.php');
 require(__DIR__.'/../classes/Solas.class.php');
 require('HTTP/Request2.php');

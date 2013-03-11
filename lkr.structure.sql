@@ -61,6 +61,21 @@ CREATE TABLE IF NOT EXISTS `jobs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `glossaryEntries`
+--
+
+CREATE TABLE IF NOT EXISTS `glossaryEntries` (
+    `glossary_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `job_id` int(10) unsigned NOT NULL,
+    `ref` VARCHAR(255) NOT NULL,
+    `term` VARCHAR(255) NOT NULL,
+    `translation` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`glossary_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `annotatorsRefs`
 --
 

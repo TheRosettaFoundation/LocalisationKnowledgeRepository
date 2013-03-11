@@ -96,6 +96,33 @@ class IO {
 		// Parse the XML, extracting the segment text.
 		$doc = new DOMDocument();
 		$doc->loadXML($xliff_str);
+
+        //Read header info
+        $glossaries = $doc->getElementsByTagName("glossary-entry");
+        if (count($glossaries) < 1) {
+            $glossaries = $doc->getElementsByTagName("itsx:glossary-entry");
+        }
+        foreach ($glossaries as $glossary) {
+            $ref = $glossary->getAttribute("id");
+            if ($glossary->hasChildNodes()) {
+                $term = "";
+                $translation = "";
+                $node = $glossary->firstChild;
+                while ($node != NULL) {
+                    if ($node->nodeName == "itsx:term" || $node->nodeName == "term") {
+                        $term = $node->textContent;
+                    }
+                    if ($node->nodeName == "itsx:translation" || $node->nodeName == "translation") {
+                        $translation = $node->textContent;
+                    }
+                    $node = $node->nextSibling;
+                }
+                if ($ref != "" && $translation != "" && $term != "") {
+                    GlossaryEntry::insert($sql, $job_id, $ref, $term, $translation);
+                }
+            }
+        }
+
         $fileId = 1;
         foreach($doc->getElementsByTagName("file") as $file) {
             foreach($file->getElementsByTagName('source') as $source)

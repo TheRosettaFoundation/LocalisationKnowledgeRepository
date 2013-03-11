@@ -89,13 +89,13 @@ if ($job)
                                 if ($refs && count($refs) > 0) {
                                     echo "<tr>";
                                     echo "<td></td>";
-                                    echo "<td>Annotator References:</td>";
+                                    echo "<td><b>Annotator References:</b></td>";
                                     echo "<td></td>";
                                     echo "</tr>";
                                     foreach ($refs as $ref) {
                                         echo "<tr>";
                                         echo "<td></td>";
-                                        echo "<td>".$ref->getCategory()."</td>";
+                                        echo "<td><b>".$ref->getCategory()."</b></td>";
                                         $href = $ref->getRef();
                                         echo "<td><a target='_blank' href='$href'>$href</a></td>";
                                         echo "</tr>";
@@ -171,6 +171,7 @@ if ($job)
 	<?php
 	// reShow this at the bottom of the table for usability
 	$job->printAuthorStatusBar($report);
+    $job->printGlossaryEntries();
     echo "<br />";
     $job->printLegend();
 echo '</p>';

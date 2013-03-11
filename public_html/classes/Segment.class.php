@@ -68,7 +68,7 @@ class Segment {
     private function parseElement($node)
     {
         $source_parsed = "";
-        if ($node->tagName == '') {
+        if (get_class($node) == "DOMText") {
             $source_parsed = $node->nodeValue;
         } else {
             $closingTag = "";
@@ -94,6 +94,17 @@ class Segment {
                     } elseif(strcasecmp($mtype, "x-its-Translate-Yes") == 0) {
                         $source_parsed .= " <span class='translate'>";
                         $closingTag .= "</span>";
+                    } elseif(strcasecmp($mtype, "term") == 0) {
+                        $confidence = $node->getAttribute("its:termConfidence");
+                        if ($confidence == "") {
+                            $confidence = $node->getAttribute("termConfidence");
+                        }
+                        $ref = $node->getAttribute("its:termInfoRef");
+                        if ($ref == "") {
+                            $ref = $node->getAttribute("termInfoRef");
+                        }
+                        $source_parsed .= "<span class='term' title='Confidence: $confidence'>";
+                        $closingTag .= "</span><sup><a href='$ref'>[$ref]</a></sup>";
                     } elseif(strcasecmp($mtype, "x-its") || strcasecmp($mtype, "xits")) {
                         $comment = $node->getAttribute("comment");
                         if ($comment != "") {
