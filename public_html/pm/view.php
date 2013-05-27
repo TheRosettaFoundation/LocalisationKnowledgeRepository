@@ -5,6 +5,8 @@
  * express prior written permission of the copyright holder.              *
  *------------------------------------------------------------------------*/
 
+error_reporting(0);
+
 /*
  * This script allows a project manager to examine the author's work and
  * close and export a file or send it back to the author

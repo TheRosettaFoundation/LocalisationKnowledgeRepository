@@ -5,6 +5,8 @@
  * express prior written permission of the copyright holder.              *
  *------------------------------------------------------------------------*/
 
+error_reporting(0);
+
 /*
  * Here the author edits the job in adherence to the guidelines attached to each segment
  * @author: David O Carroll

@@ -139,10 +139,8 @@ class IO {
                 $translate = "yes";
                 while(strcasecmp($parent->nodeName, "file") != 0 && !$found) {
                     $parent = $parent->parentNode;
-                    echo "<p>Checking ".$parent->nodeName."</p>";
                     $translate = $parent->getAttribute('translate');
                     if($translate != null) {
-                        echo "<p>translate att found</p>";
                         $found = true;
                     }
                     $annotatorsRef = $parent->getAttribute('annotatorsRef');

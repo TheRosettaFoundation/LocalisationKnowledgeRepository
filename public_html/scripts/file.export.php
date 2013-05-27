@@ -95,7 +95,12 @@ else if(isset($_POST['save_to_xliff']))
 		{
 			//Add the segment data for each segment
 			$data .= "\t\t\t<trans-unit id='#".$segment->getSegmentID()."'>\n";
-			$data .= "\t\t\t\t".$segment->getTargetRaw()."\n\t\t\t\t\n";
+            if (strncasecmp($segment->getTargetRaw(), "<seg-source>", strlen("<seg-source>")) == 0 ||
+                    strncasecmp($segment->getTargetRaw(), "<source>", strlen("<source>")) == 0) {
+       			$data .= "\t\t\t\t".$segment->getTargetRaw()."\n\t\t\t\t\n";
+            } else {
+                $data .= "\t\t\t\t<source>".$segment->getTargetRaw()."</source>\n\t\t\t\t\n";
+            }
 			$data .= "\t\t\t\t<target></target>\n";		//This remains blank
 			$data .= "\t\t\t</trans-unit>\n";
 		}
