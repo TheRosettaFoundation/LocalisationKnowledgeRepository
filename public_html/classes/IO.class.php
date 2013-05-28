@@ -128,7 +128,7 @@ class IO {
             foreach($file->getElementsByTagName('trans-unit') as $transUnit)
             {
               	$trans_unit_id = $transUnit->getAttribute('id');
-                if (count($transUnit->getElementsByTagName('seg-source')) > 0) {
+                if ($transUnit->getElementsByTagName('seg-source')->length > 0) {
                     $source = $transUnit->getElementsByTagName('seg-source')->item(0);
                 } else {
                     $source = $transUnit->getElementsByTagName('source')->item(0);
