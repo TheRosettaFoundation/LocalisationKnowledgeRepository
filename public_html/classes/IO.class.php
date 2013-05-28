@@ -156,10 +156,8 @@ class IO {
                     }
                 }
                 if($translate == "no") {
-                    echo "<p>Setting translate to false</p>";
                     $translate = 0;
                 } else {
-                    echo "<p>Setting translate true</p>";
                     $translate = 1;
                 }
 
