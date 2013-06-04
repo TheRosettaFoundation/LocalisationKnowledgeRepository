@@ -189,7 +189,7 @@ class Segment {
 	{
 		$sql = new MySQLHandler();
 		$sql->init();
-		$q = 'SELECT edited
+		$q = 'SELECT CAST(edited as UNSIGNED)
 				FROM segments
 				WHERE segment_id = '.$this->getSegmentID().'
 				AND job_id = '.$this->getJobID();
@@ -231,9 +231,10 @@ class Segment {
      */
     function isTranslatable()
     {
+        $ret = null;
         $db = new MySQLHandler();
         $db->init();
-        $q = "SELECT translate
+        $q = "SELECT CAST(translate as UNSIGNED)
                 FROM segments
                 WHERE segment_id = ".$this->getSegmentID()."
                 AND job_id = ".$this->getJobID();

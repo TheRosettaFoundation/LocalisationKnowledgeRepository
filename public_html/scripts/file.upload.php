@@ -50,7 +50,6 @@ if(strlen($companyName) != 0)
 
 if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploaded file
 {
-  echo '<p>Found uploaded file</p>';
 	$job_id = false;
 	// Check if it's an XLIFF file being uploaded.
 	$ext = strtolower(array_pop(explode('.',$_FILES['import_file']['name'])));
@@ -74,7 +73,7 @@ if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploa
 	  	$job_id = Job::insert($sql, $name, $email, $companyName, $domain, null, null, $_FILES['import_file']['name'], $xliff_file_contents);
 	  	IO::createSegmentsFromXLIFF($sql, $job_id, $xliff_file_contents);
 	}
-	else if ($ext == 'txt')
+	elseif ($ext == 'txt')
 	{
     echo '<p>Its a txt</p>';
 		$job_id = Job::insert($sql, $name, $email, $companyName, $domain);
@@ -120,8 +119,9 @@ if (is_uploaded_file($_FILES['import_file']['tmp_name'])) // Checks for an uploa
 	}
 }
 //elseif($operation == 'Import This Text')
-else if (!empty($_POST['import_textarea']))
+elseif (!empty($_POST['import_textarea']))
 {
+    echo "<p>Importing from text area</p>";
 	// Import the text written in the text area
 	$sql = new MySQLHandler();
 	$sql->init();

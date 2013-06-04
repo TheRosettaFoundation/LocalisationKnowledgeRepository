@@ -97,9 +97,92 @@ class IO {
 		$doc = new DOMDocument();
 		$doc->loadXML($xliff_str);
 
+        $xlf = $doc->getElementsByTagName("xliff")->item(0);
+        $version = $xlf->getAttribute("version");
+        if ($version == "2.0") {
+            self::createSegmentsFromXliffTwoZero($sql, $job_id, $doc);
+        } else {
+            self::createSegmentsFromXliffOneTwo($sql, $job_id, $doc);
+        }
+    }
+    
+    public static function createSegmentsFromXliffTwoZero(&$sql, $jobId, $doc)
+    {
+        $glossaries = $doc->getElementsByTagName("glossentry");
+        if ($glossaries->length > 0) {
+            foreach ($glossaries as $glossary) {
+                $ref = $glossary->getAttribute('id');
+                if ($glossary->hasChildNodes()) {
+                    $term = "";
+                    $translation = "";
+                    $node = $glossary->firstChild;
+                    while ($node != NULL) {
+                        if ($node->nodeName == "term") {
+                            $term = $node->textContent;
+                        }
+                        if ($node->nodeName == "translation" || $node->nodeName == 'definition') {
+                            $translation = $node->textContent;
+                        }
+                        $node = $node->nextSibling;
+                    }
+                    if ($ref != "" && $translation != "" && $term != "") {
+                        GlossaryEntry::insert($sql, $jobId, $ref, $term, $translation);
+                    }
+                }
+            }
+        }
+
+        $files = $doc->getElementsByTagName('file');
+        if ($files->length > 0) {
+            $fileId = 1;
+            foreach ($files as $file) {
+                $segments = $file->getElementsByTagName('segment');
+                if ($segments->length > 0) {
+                    $segCount = 1;
+                    foreach ($segments as $segment) {
+                        $source = $segment->getElementsByTagName('source')->item(0);
+                        $segment = $doc->saveXML($source);
+                        $parent = $source;
+                        $found = false;
+                        $translate = "yes";
+                        while(strcasecmp($parent->nodeName, "file") != 0 && !$found) {
+                            $parent = $parent->parentNode;
+                            $translate = $parent->getAttribute('translate');
+                            if($translate != null) {
+                                $found = true;
+                            }
+                            $annotatorsRef = $parent->getAttribute('annotatorsRef');
+                            if ($annotatorsRef == NULL) {
+                                $annotatorsRef = $parent->getAttribute('its:annotatorsRef');
+                            }
+                            if ($annotatorsRef != NULL) {
+                                $category = substr($annotatorsRef, 0, strpos($annotatorsRef, "|"));
+                                $ref = substr($annotatorsRef, strpos($annotatorsRef, "|") + 1);
+                                if (!AnnotatorsRef::exists($sql, $jobId, $fileId, $ref, $category)) {
+                                    AnnotatorsRef::insert($sql, $jobId, $fileId, $ref, $category);
+                                }
+                            }
+                        }
+                        if($translate == "no") {
+                            $translate = 0;
+                        } else {
+                            $translate = 1;
+                        }
+                        
+                        Segment::insert($sql, $jobId, $segment, $fileId, $segCount, $translate);
+                        $segCount++;
+                    }
+                }
+                $fileId++;
+            }
+        }
+    }
+
+    private static function createSegmentsFromXliffOneTwo(&$sql, $job_id, $doc)
+    {
         //Read header info
         $glossaries = $doc->getElementsByTagName("glossary-entry");
-        if (count($glossaries) < 1) {
+        if ($glossaries->length < 1) {
             $glossaries = $doc->getElementsByTagName("itsx:glossary-entry");
         }
         foreach ($glossaries as $glossary) {

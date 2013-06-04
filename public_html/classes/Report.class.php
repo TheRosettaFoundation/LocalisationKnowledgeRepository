@@ -275,6 +275,7 @@ class Report
 	 */
 	private function runRegexCheck($report_name, $segment)
 	{
+        $params = array();
 		$regex = $this->reportValue($report_name);
 		if($segment->containsRegex($regex))
 		{
@@ -296,6 +297,7 @@ class Report
 	 */
 	private function runStartOfSentenceRegexCheck($report_name, $segment)
 	{
+        $params = array();
 		$regex = $this->reportValue($report_name);
 		if(preg_match('/'.$regex.'/', ltrim($segment->getTargetRaw())))
 		{

@@ -918,7 +918,7 @@ class Job {
 		{
             $settings = new Settings();
             $domain_root = $settings->path_to_domain_root($_SERVER);
-			$segs_with_warnings = $report->getInfectedSegments($job_id);
+			$segs_with_warnings = $report->getInfectedSegments($this->job_id);
 			$warningCount = $this->countWarnings($report);
 			if($warningCount == 0)
 			{

@@ -9,6 +9,8 @@
  * @author: David O Carroll
  */
 
+//error_reporting(E_ALL);
+
 require(__DIR__.'/../classes/Settings.class.php');
 require(__DIR__.'/../classes/MySQLHandler.class.php');
 require(__DIR__.'/../classes/IO.class.php');
