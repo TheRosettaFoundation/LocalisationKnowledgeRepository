@@ -52,7 +52,7 @@ if ($file_extention == 'xlf' || $file_extention == 'xliff' || $job->isSolasJob()
 	$simple_xml = $job->xmlUpdateSegments($simple_xml);
 	$data = $simple_xml->asXML();
 }
-else if(isset($_POST['save_to_xliff']))
+elseif(isset($_POST['save_to_xliff']))
 {
 	// Generate the contents of the file to be exported
 	//Concatenate all the text file to the data variable for use later

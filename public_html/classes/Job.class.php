@@ -187,86 +187,143 @@ class Job {
 	
 	function xmlUpdateMetadata(&$simple_xml, $domain, $word_count, $segment_count, $character_count, $author_name, $email_address, $company_name, $comment)
 	{
-		if (isset($simple_xml->file->attributes()->category))
-		{
-			// Only bother changing the XLIFF if the new $domain value
-			// is different to the existing one.
-			$category = $simple_xml->file->attributes()->category[0];
-			if ($category != $domain)
-			{
-				$simple_xml->file->attributes()->category = $domain;
-			}
-		}
-		else if (!empty($domain))
-		{
-			// Create the category attribute in the XLIFF.
-			$simple_xml->file['category'] = $domain;
-		}
+        if (isset($simple_xml->file->attributes()->category)) {
+            // Only bother changing the XLIFF if the new $domain value
+            // is different to the existing one.
+            $category = $simple_xml->file->attributes()->category[0];
+            if ($category != $domain) {
+                $simple_xml->file->attributes()->category = $domain;
+            }
+        } elseif (!empty($domain)) {
+            // Create the category attribute in the XLIFF.
+            $simple_xml->file['category'] = $domain;
+        }
+
+        if ($simple_xml->attributes()->version[0] == "2.0") {
+            $metadata = $simple_xml->file->{'mda:metadata'};
+            if ($metadata->count == 0) {
+                $metadata = $simple_xml->file->addChild('mda:metadata');
+            } else {
+                $metadata = $metadata[0];
+            }
+
+            $group = $metadata->addChild('mda:metagroup');
+            $group->addAttribute('category', 'phase');
+
+            $element = $group->addChild('mda:meta', 'Quality Assurance');
+            $element->addAttribute('type', 'phase-name');
+
+            if (!empty($company_name)) {
+                $element = $group->addChild('mda:meta', $company_name);
+                $element->addAttribute('type', 'company-name');
+            }
+
+            $element = $group->addChild('mda:meta', 'authoring');
+            $element->addAttribute('type', 'process-name');
+
+            if (!empty($author_name)) {
+                $element = $group->addChild('mda:meta', $author_name);
+                $element->addAttribute('type', 'contact-name');
+            }
+
+            if (!empty($email_address)) {
+                $element = $group->addChild('mda:meta', $email_address);
+                $element->addAttribute('type', 'contact-email');
+            }
+
+            $element = $group->addChild('mda:meta', $this->getJobID());
+            $element->addAttribute('type', 'job-id');
+
+            $element = $group->addChild('mda:meta', 'LKR');
+            $element->addAttribute('type', 'tool-id');
+
+            $group = $metadata->addChild('mda:metagroup');
+            $group->addAttribute('category', 'tool');
+
+            $element = $group->addChild('mda:meta', 'LKR');
+            $element->addAttribute('type', 'tool-id');
+
+            $element = $group->addChild('mda:meta', 'LKR');
+            $element->addAttribute('type', 'tool-name');
+
+            $element = $group->addChild('mda:meta', 'v1');
+            $element->addAttribute('type', 'tool-version');
+
+            if (!empty($comment)) {
+                $group = $metadata->addChild('mda:metagroup');
+                $group->addAttribute('category', 'note');
+
+                $element = $group->addChild('mda:meta', $comment);
+                $element->addAttribute('type', 'note');
+            }
+
+            $group = $metadata->addChild('mda:metagroup');
+            $group->addAttribute('category', 'count');
+
+            $element = $group->addChild('mda:meta', $word_count);
+            $element->addAttribute('type', 'word_count');
+
+            $element = $group->addChild('mda:meta', $segment_count);
+            $element->addAttribute('type', 'segment_count');
+
+            $element = $group->addChild('mda:meta', $character_count);
+            $element->addAttribute('type', 'character_count');
+        } else {
+    		// Enter tool and author information.
+	    	$phase_group = false;
+		    $phase = false;
+    		if ($simple_xml->file->head->{'phase-group'} == null) {
+	    		$phase_group = $simple_xml->file->header->addChild('phase-group');
+		    	$phase = $phase_group->addChild('phase');
+	    	} else {
+		    	$phase_group = $simple_xml->file->header->{'phase-group'};
+	    		$phase = $phase_group[0]->addChild('phase');
+    		}
+	    	$phase->addAttribute('phase-name', 'Quality Assurance');
+    		if (!empty($company_name)) {
+    			$phase->addAttribute('company-name', $company_name);
+    		} 
+	    	$phase->addAttribute('process-name', 'authoring');
+    		if (!empty($author_name)) {
+		    	$phase->addAttribute('contact-name', $author_name);
+	    	} 
+    		if (!empty($email_address)) {
+	    		$phase->addAttribute('contact-email', $email_address);
+    		}
+		    $phase->addAttribute('job-id', $this->getJobID());
+	    	$phase->addAttribute('tool-id', 'LKR');
+    		// Add <tool>
+		    $tool = $simple_xml->file->header->addChild('tool');
+	    	$tool->addAttribute('tool-name', 'LKR');
+    		$tool->addAttribute('tool-id', 'LKR');
+		    $tool->addAttribute('tool-version', 'v1');
+	    	// Add <note>
+    		if (!empty($comment)) {
+			    $simple_xml->file->header->addChild('note', $comment);
+		    }
 		
-		// Enter tool and author information.
-		$phase_group = false;
-		$phase = false;
-		if ($simple_xml->file->head->{'phase-group'} == null)
-		{
-			$phase_group = $simple_xml->file->header->addChild('phase-group');
-			$phase = $phase_group->addChild('phase');
-		}
-		else
-		{
-			$phase_group = $simple_xml->file->header->{'phase-group'};
-			$phase = $phase_group[0]->addChild('phase');
-		}
-		$phase->addAttribute('phase-name', 'Quality Assurance');
-		if (!empty($company_name))
-		{
-			$phase->addAttribute('company-name', $company_name);
-		} 
-		$phase->addAttribute('process-name', 'authoring');
-		if (!empty($author_name))
-		{
-			$phase->addAttribute('contact-name', $author_name);
-		} 
-		if (!empty($email_address))
-		{
-			$phase->addAttribute('contact-email', $email_address);
-		}
-		$phase->addAttribute('job-id', $this->getJobID());
-		$phase->addAttribute('tool-id', 'LKR');
-		// Add <tool>
-		$tool = $simple_xml->file->header->addChild('tool');
-		$tool->addAttribute('tool-name', 'LKR');
-		$tool->addAttribute('tool-id', 'LKR');
-		$tool->addAttribute('tool-version', 'v1');
-		// Add <note>
-		if (!empty($comment))
-		{
-			$simple_xml->file->header->addChild('note', $comment);
-		}
+	    	// Create the statistics elements in a <group>.
+    		if (!empty($word_count)) {
+	    		$simple_xml->file->body->group->{'count-group'}[0]->count = $word_count;
+    			$simple_xml->file->body->group->{'count-group'}[0]['name'] = 'word_count';
+			    $simple_xml->file->body->group->{'count-group'}[0]->count['count-type'] = 'total';
+		    	$simple_xml->file->body->group->{'count-group'}[0]->count['unit'] = 'word';	
+	    	}
 		
-		// Create the statistics elements in a <group>.
-		if (!empty($word_count))
-		{
-			$simple_xml->file->body->group->{'count-group'}[0]->count = $word_count;
-			$simple_xml->file->body->group->{'count-group'}[0]['name'] = 'word_count';
-			$simple_xml->file->body->group->{'count-group'}[0]->count['count-type'] = 'total';
-			$simple_xml->file->body->group->{'count-group'}[0]->count['unit'] = 'word';	
-		}
+    		if (!empty($segment_count)) {
+	    		$simple_xml->file->body->group->{'count-group'}[1]->count = $segment_count;
+    			$simple_xml->file->body->group->{'count-group'}[1]['name'] = 'segment_count';
+			    $simple_xml->file->body->group->{'count-group'}[1]->count['count-type'] = 'total';
+		    	$simple_xml->file->body->group->{'count-group'}[1]->count['unit'] = 'segment';
+	    	}
 		
-		if (!empty($segment_count))
-		{
-			$simple_xml->file->body->group->{'count-group'}[1]->count = $segment_count;
-			$simple_xml->file->body->group->{'count-group'}[1]['name'] = 'segment_count';
-			$simple_xml->file->body->group->{'count-group'}[1]->count['count-type'] = 'total';
-			$simple_xml->file->body->group->{'count-group'}[1]->count['unit'] = 'segment';
-		}
-		
-		if (!empty($character_count))
-		{
-			$simple_xml->file->body->group->{'count-group'}[2]->count = $character_count;
-			$simple_xml->file->body->group->{'count-group'}[2]['name'] = 'character_count';
-			$simple_xml->file->body->group->{'count-group'}[2]->count['count-type'] = 'total';
-			$simple_xml->file->body->group->{'count-group'}[2]->count['unit'] = 'character';
-		}
+    		if (!empty($character_count)) {
+    			$simple_xml->file->body->group->{'count-group'}[2]->count = $character_count;
+			    $simple_xml->file->body->group->{'count-group'}[2]['name'] = 'character_count';
+		    	$simple_xml->file->body->group->{'count-group'}[2]->count['count-type'] = 'total';
+	    		$simple_xml->file->body->group->{'count-group'}[2]->count['unit'] = 'character';
+    		}
+        }
 		
 		return $simple_xml;
 	}
@@ -286,24 +343,35 @@ class Job {
 				{
 					// Update segment text in the XML.
 					$trans_unit_id = $segment->getTransUnitID();
-					foreach ($simple_xml->file->body->{'trans-unit'} as $trans_unit)
-					{
-						if ($trans_unit->attributes()->id[0] == $trans_unit_id)
-						{
-                            $doc = new DOMDocument();
-                            $doc->loadXML($segment->getTargetRaw());
-                            if (count($doc->getElementsByTagName('seg-source') > 0)) {
-                                $segSource = $doc->getElementsByTagName('seg-source')->item(0);
-                                $parent = $segSource->parentNode;
-                                if ($parent) {
-                                    $segSource->parentNode->removeChild($segSource);
+                    if ($simple_xml->attributes()->version[0] == "2.0") {
+//                        echo "<p>File is Xliff 2.0</p>";
+/*                        $doc = new DOMDocument();
+                        $doc->loadXML($segment->getTargetRaw()."</source>");
+                        $segSource = $doc->getElementsByTagName('source')->item(0);
+//                        if ($simple_xml->xpath("//segment")[$segment->getTransUnitID() - 1]
+//                        $simple_xml->xpath("//segment")[$segment->getTransUnitID() - 1]->source = $doc->saveXml($segSource);
+                        $simple_xml->xpath("//segment")[($segment->getTransUnitID() - 1)]->source = $doc->saveXml("<source>Test</source>");*/
+                    } else {
+//                        echo "<p>File is Xliff 1.2</p>";
+    					foreach ($simple_xml->file->body->{'trans-unit'} as $trans_unit)
+	    				{
+		    				if ($trans_unit->attributes()->id[0] == $trans_unit_id)
+			    			{
+                                $doc = new DOMDocument();
+                                $doc->loadXML($segment->getTargetRaw());
+                                if ($doc->getElementsByTagName('seg-source')->length > 0) {
+                                    $segSource = $doc->getElementsByTagName('seg-source')->item(0);
+                                    $parent = $segSource->parentNode;
+                                    if ($parent) {
+                                        $segSource->parentNode->removeChild($segSource);
+                                    }
+                                    $children = $trans_unit->children();
+                                    $children['seg-source'][0] = $doc->saveXML($segSource);
+                                } else {
+                                    $source = $doc->getElementsByTagName('source')->item(0);
+                                    $source->parentNode->removeChild($source);
+                                    $trans_unit->children()->source[0] = $doc->saveXML($source);
                                 }
-                                $children = $trans_unit->children();
-                                $children['seg-source'][0] = $doc->saveXML($segSource);
-                            } else {
-                                $source = $doc->getElementsByTagName('source')->item(0);
-                                $source->parentNode->removeChild($source);
-                                $trans_unit->children()->source[0] = $doc->saveXML($source);
                             }
 						}
 					}

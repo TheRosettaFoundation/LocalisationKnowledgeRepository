@@ -268,7 +268,7 @@ class Segment {
 		$sql = new MySQLHandler();
 		$sql->init();
 		$q = 'UPDATE segments
-				SET target_raw = "'.$text.'"
+				SET target_raw = "'.addslashes($text).'"
 				WHERE job_id = '.$this->getJobID().'
 				AND segment_id = '.$this->getSegmentID();
 		$sql->Update($q);

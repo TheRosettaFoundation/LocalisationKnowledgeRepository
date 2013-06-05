@@ -17,7 +17,7 @@ require(__DIR__.'/init.php');
  * job_id data through jEditable calls. Below the parameter is distilled to get the two different values.
  */
 $job_segment = IO::post_val('id');
-$text = IO::post_val('value');
+$text = $_POST['value'];
 $job_id = false;
 $segment_id = false;
 
