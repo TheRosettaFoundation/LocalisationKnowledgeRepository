@@ -250,11 +250,10 @@ class Job {
             $element->addAttribute('type', 'tool-version');
 
             if (!empty($comment)) {
-                $group = $metadata->addChild('mda:metagroup');
-                $group->addAttribute('category', 'note');
-
-                $element = $group->addChild('mda:meta', $comment);
-                $element->addAttribute('type', 'note');
+                $units = $simple_xml->xpath('//unit');
+                $unit = $units[0];
+                $notes = $unit->addChild('notes');
+                $notes->addChild('note', $comment);
             }
 
             $group = $metadata->addChild('mda:metagroup');
