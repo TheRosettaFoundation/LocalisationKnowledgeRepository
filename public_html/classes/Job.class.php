@@ -166,7 +166,7 @@ class Job {
 		$sql = new MySQLHandler();
 		$sql->init();
 		$q = 'UPDATE segments
-					SET target_raw = "'.$new_sentences[0].'."
+					SET target_raw = "'.addslashes($new_sentences[0]).'."
 					WHERE job_id = '.$this->getJobID().'
 					AND segment_id = '.$seg_id;
 		$sql ->Update($q);
@@ -335,6 +335,7 @@ class Job {
 	 */
 	function xmlUpdateSegments(&$simple_xml)
 	{
+        $version = $simple_xml->attributes()->version[0];
 		if ($segments = $this->getSegments())
 		{
 			foreach($segments as $segment)
@@ -343,16 +344,34 @@ class Job {
 				{
 					// Update segment text in the XML.
 					$trans_unit_id = $segment->getTransUnitID();
-                    if ($simple_xml->attributes()->version[0] == "2.0") {
-//                        echo "<p>File is Xliff 2.0</p>";
-/*                        $doc = new DOMDocument();
-                        $doc->loadXML($segment->getTargetRaw()."</source>");
-                        $segSource = $doc->getElementsByTagName('source')->item(0);
-//                        if ($simple_xml->xpath("//segment")[$segment->getTransUnitID() - 1]
-//                        $simple_xml->xpath("//segment")[$segment->getTransUnitID() - 1]->source = $doc->saveXml($segSource);
-                        $simple_xml->xpath("//segment")[($segment->getTransUnitID() - 1)]->source = $doc->saveXml("<source>Test</source>");*/
+                    if ($version == "2.0") {
+                        $internal_errors = libxml_use_internal_errors(true);
+                        $doc = new DOMDocument();
+                        $doc->loadXML($segment->getTargetRaw()."</source>", LIBXML_NOWARNING);
+                        $sources = $doc->getElementsByTagName('source');
+                        if ($sources->length > 0) {
+                            $source = $sources->item(0);
+                        } else {
+                            $doc->loadXML("<source>".$segment->getTargetRaw()."</source>");
+                            $source = $doc->getElementsByTagName('source')->item(0);
+                        }
+
+                        $fileSegments = $simple_xml->xpath("//segment");
+                        if (count($fileSegments) >= $segment->getSegmentID()) {
+                            $dom = dom_import_simplexml($fileSegments[$segment->getSegmentID() - 1]);
+                            $newSource = $dom->ownerDocument->importNode($source, true);
+                            $oldSource = $dom->getElementsByTagName('source')->item(0);
+                            $dom->replaceChild($newSource, $oldSource);
+                        } else {
+                            $dom = dom_import_simplexml($fileSegments[$segment->getSegmentID() - 2]);
+                            $segment = $doc->createElement("segment");
+                            $segment->appendChild($source);
+                            $newSegment = $dom->ownerDocument->importNode($segment, true);
+                            $parent = $dom->parentNode;
+                            $parent->appendChild($newSegment);
+                        }
+                        libxml_use_internal_errors($internal_errors);
                     } else {
-//                        echo "<p>File is Xliff 1.2</p>";
     					foreach ($simple_xml->file->body->{'trans-unit'} as $trans_unit)
 	    				{
 		    				if ($trans_unit->attributes()->id[0] == $trans_unit_id)
