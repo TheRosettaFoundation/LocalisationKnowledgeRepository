@@ -109,6 +109,10 @@ class IO {
     public static function createSegmentsFromXliffTwoZero(&$sql, $jobId, $doc)
     {
         $glossaries = $doc->getElementsByTagName("glossentry");
+        if ($glossaries->length < 1) {
+            $glossaries = $doc->getElementsByTagName('gls:glossentry');
+        }
+
         if ($glossaries->length > 0) {
             foreach ($glossaries as $glossary) {
                 $ref = $glossary->getAttribute('id');
@@ -117,10 +121,11 @@ class IO {
                     $translation = "";
                     $node = $glossary->firstChild;
                     while ($node != NULL) {
-                        if ($node->nodeName == "term") {
+                        if ($node->nodeName == "term" || $node->nodeName == "gls:term") {
                             $term = $node->textContent;
                         }
-                        if ($node->nodeName == "translation" || $node->nodeName == 'definition') {
+                        if ($node->nodeName == "translation" || $node->nodeName == 'gls:translation' ||
+                                $node->nodeName == 'definition' || $node->nodeName == 'gls:definition') {
                             $translation = $node->textContent;
                         }
                         $node = $node->nextSibling;
