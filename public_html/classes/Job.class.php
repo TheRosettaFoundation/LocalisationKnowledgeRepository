@@ -185,100 +185,168 @@ class Job {
 		return (intval($this->job_id) > 0) ? $this->job_id : false;
 	}
 	
-	function xmlUpdateMetadata(&$simple_xml, $domain, $word_count, $segment_count, $character_count, $author_name, $email_address, $company_name, $comment)
+	function xmlUpdateMetadata($xliff, $domain, $word_count, $segment_count, $character_count, $author_name, $email_address, $company_name, $comment)
 	{
-        if (isset($simple_xml->file->attributes()->category)) {
-            // Only bother changing the XLIFF if the new $domain value
-            // is different to the existing one.
-            $category = $simple_xml->file->attributes()->category[0];
-            if ($category != $domain) {
-                $simple_xml->file->attributes()->category = $domain;
+        $dom = new DOMDocument();
+        $dom->loadXML($xliff);
+        $rootElement = $dom->getElementsByTagName('xliff')->item(0);
+        if ($rootElement->getAttribute('version') == "2.0") {
+            $metadata = $dom->getElementsByTagName('mda:metadata');
+            if ($metadata->length == 0) {
+                $metadata = $dom->getElementsByTagName('metadata');
             }
-        } elseif (!empty($domain)) {
-            // Create the category attribute in the XLIFF.
-            $simple_xml->file['category'] = $domain;
-        }
-
-        if ($simple_xml->attributes()->version[0] == "2.0") {
-            $metadata = $simple_xml->file->{'mda:metadata'};
-            if ($metadata->count == 0) {
-                $metadata = $simple_xml->file->addChild('mda:metadata');
+            if ($metadata->length == 0) {
+                $metadata = $dom->createELement('mda:metadata');
             } else {
-                $metadata = $metadata[0];
+                $metadata = $metadata->item(0);
             }
 
-            $group = $metadata->addChild('mda:metagroup');
-            $group->addAttribute('category', 'phase');
+            $group = $dom->createElement('mda:metagroup');
+            $group->setAttribute('category', 'phase');
 
-            $element = $group->addChild('mda:meta', 'Quality Assurance');
-            $element->addAttribute('type', 'phase-name');
+            $element = $dom->createElement('mda:meta', 'Quality Assurance');
+            $element->setAttribute('type', 'phase-name');
+            $group->appendChild($element);
 
             if (!empty($company_name)) {
-                $element = $group->addChild('mda:meta', $company_name);
-                $element->addAttribute('type', 'company-name');
+                $element = $dom->createElement('mda:meta', $company_name);
+                $element->setAttribute('type', 'company-name');
+                $group->appendChild($element);
             }
 
-            $element = $group->addChild('mda:meta', 'authoring');
-            $element->addAttribute('type', 'process-name');
+            $element = $dom->createElement('mda:meta', 'authoring');
+            $element->setAttribute('type', 'process-name');
+            $group->appendChild($element);
 
             if (!empty($author_name)) {
-                $element = $group->addChild('mda:meta', $author_name);
-                $element->addAttribute('type', 'contact-name');
+                $element = $dom->createElement('mda:meta', $author_name);
+                $element->setAttribute('type', 'contact-name');
+                $group->appendChild($element);
             }
 
             if (!empty($email_address)) {
-                $element = $group->addChild('mda:meta', $email_address);
-                $element->addAttribute('type', 'contact-email');
+                $element = $dom->createElement('mda:meta', $email_address);
+                $element->setAttribute('type', 'contact-email');
+                $group->appendChild($element);
             }
 
-            $element = $group->addChild('mda:meta', $this->getJobID());
-            $element->addAttribute('type', 'job-id');
+            $element = $dom->createElement('mda:meta', $this->getJobID());
+            $element->setAttribute('type', 'job-id');
+            $group->appendChild($element);
 
-            $element = $group->addChild('mda:meta', 'LKR');
-            $element->addAttribute('type', 'tool-id');
+            $element = $dom->createElement('mda:meta', 'LKR');
+            $element->setAttribute('type', 'tool-id');
+            $group->appendChild($element);
 
-            $group = $metadata->addChild('mda:metagroup');
-            $group->addAttribute('category', 'tool');
+            $metadata->appendChild($group);
 
-            $element = $group->addChild('mda:meta', 'LKR');
-            $element->addAttribute('type', 'tool-id');
+            $group = $dom->createElement('mda:metagroup');
+            $group->setAttribute('category', 'tool');
 
-            $element = $group->addChild('mda:meta', 'LKR');
-            $element->addAttribute('type', 'tool-name');
+            $element = $dom->createElement('mda:meta', 'LKR');
+            $element->setAttribute('type', 'tool-id');
+            $group->appendChild($element);
 
-            $element = $group->addChild('mda:meta', 'v1');
-            $element->addAttribute('type', 'tool-version');
+            $element = $dom->createElement('mda:meta', 'LKR');
+            $element->setAttribute('type', 'tool-name');
+            $group->appendChild($element);
+
+            $element = $dom->createElement('mda:meta', 'v1');
+            $element->setAttribute('type', 'tool-version');
+            $group->appendChild($element);
+
+            $metadata->appendChild($group);
 
             if (!empty($comment)) {
-                $units = $simple_xml->xpath('//unit');
-                $unit = $units[0];
-                $notes = $unit->addChild('notes');
-                $notes->addChild('note', $comment);
+                $file = $dom->getElementsByTagName("file")->item(0);
+                $notes = $file->getElementsByTagName('notes');
+                $oldNotes = null;
+                if ($notes->length == 0) {
+                    $notes = $dom->createElement('notes');
+                } else {
+                    $notes = $notes->item(0);
+                    $oldNotes = $notes;
+                }
+
+                $note = $dom->createElement('note', $comment);
+                $notes->appendChild($note);
+
+                if ($oldNotes != null) {
+                    $file->replaceChild($notes, $oldNotes);
+                } else {
+                    $firstChild = $file->childNodes->item(0);
+                    while ($firstChild->nodeType != XML_ELEMENT_NODE && $firstChild != null) {
+                        $firstChild = $firstChild->nextSibling;
+                    }
+                    $file->insertBefore($notes, $firstChild);
+                }
+            }
+ 
+            $group = $dom->createElement('mda:metagroup');
+            $group->setAttribute('category', 'count');
+
+            $element = $dom->createElement('mda:meta', $word_count);
+            $element->setAttribute('type', 'word_count');
+            $group->appendChild($element);
+
+            $element = $dom->createElement('mda:meta', $segment_count);
+            $element->setAttribute('type', 'segment_count');
+            $group->appendChild($element);
+
+            $element = $dom->createElement('mda:meta', $character_count);
+            $element->setAttribute('type', 'character_count');
+            $group->appendChild($element);
+
+            $metadata->appendChild($group);
+
+            $files = $dom->getElementsByTagName('file');
+            $file = $files->item(0);
+            $oldMd = $file->getElementsByTagName('mda:metadata');
+            if ($oldMd->length == 0) {
+                $oldMd = $file->getElementsByTagName('metadata');
+            }
+            if ($oldMd->length == 0) {
+                $notes = $file->getElementsByTagName('notes');
+                if ($notes->length > 0) {
+                    $notes = $notes->item(0);
+                    $file->insertBefore($metadata, $notes->nextSibling);
+                } else {
+                    $firstChild = $file->childNodes->item(0);
+                    while ($firstChild->nodeType != XML_ELEMENT_NODE && $firstChild != null) {
+                        $firstChild = $firstChild->nextSibling;
+                    }
+                    $file->insertBefore($metadata, $firstChild);
+                }
+            } else {
+                $file->replaceChild($metadata, $oldMd->item(0));
             }
 
-            $group = $metadata->addChild('mda:metagroup');
-            $group->addAttribute('category', 'count');
-
-            $element = $group->addChild('mda:meta', $word_count);
-            $element->addAttribute('type', 'word_count');
-
-            $element = $group->addChild('mda:meta', $segment_count);
-            $element->addAttribute('type', 'segment_count');
-
-            $element = $group->addChild('mda:meta', $character_count);
-            $element->addAttribute('type', 'character_count');
+            $xliff = $dom->saveXml();
         } else {
-    		// Enter tool and author information.
-	    	$phase_group = false;
-		    $phase = false;
-    		if ($simple_xml->file->head->{'phase-group'} == null) {
-	    		$phase_group = $simple_xml->file->header->addChild('phase-group');
-		    	$phase = $phase_group->addChild('phase');
-	    	} else {
-		    	$phase_group = $simple_xml->file->header->{'phase-group'};
-	    		$phase = $phase_group[0]->addChild('phase');
-    		}
-	    	$phase->addAttribute('phase-name', 'Quality Assurance');
+            $simple_xml = new SimpleXMLElement($xliff);
+            if (isset($simple_xml->file->attributes()->category)) {
+                // Only bother changing the XLIFF if the new $domain value
+                // is different to the existing one.
+                $category = $simple_xml->file->attributes()->category[0];
+                if ($category != $domain) {
+                    $simple_xml->file->attributes()->category = $domain;
+                }
+            } elseif (!empty($domain)) {
+                // Create the category attribute in the XLIFF.
+                $simple_xml->file['category'] = $domain;
+            }
+
+       		// Enter tool and author information.
+	      	$phase_group = false;
+    	    $phase = false;
+       		if ($simple_xml->file->head->{'phase-group'} == null) {
+	       		$phase_group = $simple_xml->file->header->addChild('phase-group');
+	        	$phase = $phase_group->addChild('phase');
+        	} else {
+	   	    	$phase_group = $simple_xml->file->header->{'phase-group'};
+	       		$phase = $phase_group[0]->addChild('phase');
+    	    }
+        	$phase->addAttribute('phase-name', 'Quality Assurance');
     		if (!empty($company_name)) {
     			$phase->addAttribute('company-name', $company_name);
     		} 
@@ -322,9 +390,10 @@ class Job {
 		    	$simple_xml->file->body->group->{'count-group'}[2]->count['count-type'] = 'total';
 	    		$simple_xml->file->body->group->{'count-group'}[2]->count['unit'] = 'character';
     		}
+            $xliff = $simple_xml->asXml();
         }
 		
-		return $simple_xml;
+		return $xliff;
 	}
 	
 	/*
@@ -332,8 +401,9 @@ class Job {
 	 * edited target segments found in the database.
 	 * Used for during export of XML when completing job.
 	 */
-	function xmlUpdateSegments(&$simple_xml)
+	function xmlUpdateSegments($xliff)
 	{
+        $simple_xml = new SimpleXMLElement($xliff);
         $version = $simple_xml->attributes()->version[0];
 		if ($segments = $this->getSegments())
 		{
@@ -396,7 +466,7 @@ class Job {
 				}
 			}
 		}
-		return $simple_xml;
+		return $simple_xml->asXml();
 	}
 	
 	/*
@@ -751,7 +821,8 @@ class Job {
 		$ret = false;
 		if ($file_name = $this->getOriginalFile())
 		{
-			$ret = strtolower(array_pop(explode('.', $file_name)));
+            $splitFile = explode('.', $file_name);
+            $ret = strtolower($splitFile[count($splitFile) - 1]);
 		}
 		return $ret;
 	}

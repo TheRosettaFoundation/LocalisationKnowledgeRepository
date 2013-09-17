@@ -64,7 +64,7 @@ if(isset($_POST['submit']) && ($_POST['submit'] == 'Import') && isset($_POST['jo
 				$domain = false;
 				$target_language = false;
 				$source_language = false;
-				$original_file = false;
+				$original_file = "default";
 				//get the rest of the meta data in the file tag
 				$file_tag = $xml->xpath('/xliff/file');
 				if (count($file_tag[0]) > 0)
@@ -89,6 +89,7 @@ if(isset($_POST['submit']) && ($_POST['submit'] == 'Import') && isset($_POST['jo
 						}
 					}
 				}
+                $original_file .= '.xlf';   // All LocConnect jobs are xliff
 				$sql = new MySQLHandler();
 				$sql->init();
 				if ($job_id = Job::insert($sql, $author_name, $email_address, $company_name, $domain, $source_language, $target_language, $original_file, $file_xml, $solas_job_id))
@@ -108,9 +109,10 @@ if(isset($_POST['submit']) && ($_POST['submit'] == 'Import') && isset($_POST['jo
 					}
 					
 					//Print a message that links to setting the guidelines
-					if (Solas::sendFeedback($solas_job_id, 'Change <a href="'.IO::server().'pm/configuration/guidelines/'.$solas_job_id.'/>Guideline</a> Settings.') != 'Feedback Updated')
+                    $response = Solas::sendFeedback($solas_job_id, 'Change <a href="'.IO::server().'pm/configuration/guidelines/'.$solas_job_id.'/>Guideline</a> Settings.');
+					if ($response != '<response><msg>Feedback Updated</msg></response>')
 					{
-						echo $response; die;
+						echo "<p>Sending feedback failed: $response</p>"; die;
 					}
 				}
 			}

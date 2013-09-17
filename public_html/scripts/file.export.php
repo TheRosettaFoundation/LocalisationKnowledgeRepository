@@ -47,10 +47,9 @@ $file_extention = $job->fileExtention();
 if ($file_extention == 'xlf' || $file_extention == 'xliff' || $job->isSolasJob())
 {
 	// Get the XML from the database, update the metadata and segment.
-	$simple_xml = new SimpleXMLElement($job->getInputXLIFFStr());
-	$simple_xml = $job->xmlUpdateMetadata($simple_xml, $domain, $word_count, $segment_count, $character_count, $author_name, $email_address, $company_name, $comment);
-	$simple_xml = $job->xmlUpdateSegments($simple_xml);
-	$data = $simple_xml->asXML();
+    $xliff = $job->getInputXLIFFStr();
+	$xliff = $job->xmlUpdateMetadata($xliff, $domain, $word_count, $segment_count, $character_count, $author_name, $email_address, $company_name, $comment);
+	$data = $job->xmlUpdateSegments($xliff);
 }
 elseif(isset($_POST['save_to_xliff']))
 {
