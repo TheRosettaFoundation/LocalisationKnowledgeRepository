@@ -4,7 +4,7 @@ The LKR operates as a web application enabling authors and project managers to i
 
 Researcher: Lorcan Ryan
 
-Developers: , 
+**Coded by:**
 * [Eoin Ó Conchúir](https://github.com/eocdev)
 * [David O'Carroll](https://github.com/spaceindaver)
 * [Sean Mooney](https://github.com/SeanMooney) 
